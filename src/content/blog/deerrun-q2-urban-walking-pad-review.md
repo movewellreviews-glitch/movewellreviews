@@ -1,8 +1,8 @@
 ---
-title: "DeerRun Q2 Urban Walking Pad Review 2026: Is It Worth It?"
-excerpt: "An in-depth review of the DeerRun Q2 Urban under-desk walking pad — specs, real-world noise level, incline performance, and who it's actually worth buying for."
-coverImage: "https://deerruntreadmill.com/cdn/shop/files/BA10_45.jpg?v=1766744659&width=800"
-author: "MoveWell Reviews Team"
+title: 'DeerRun Q2 Urban Walking Pad Review 2026: Is It Worth It?'
+excerpt: An in-depth review of the DeerRun Q2 Urban under-desk walking pad — specs, real-world noise level, incline performance, and who it's actually worth buying for.
+coverImage: https://deerruntreadmill.com/cdn/shop/files/BA10_45.jpg?v=1766744659&width=800
+author: MoveWell Reviews Team
 publishDate: 2026-07-17
 draft: true
 ---
@@ -12,7 +12,8 @@ If you work from home and want to walk more without leaving your desk, the **Dee
 PLACEHOLDER: add 1-2 sentences on why you personally tested this / who asked about it.
 
 ![DeerRun Q2 Urban under-desk walking pad in black, viewed from above](https://deerruntreadmill.com/cdn/shop/files/BA10_45_5dac2511-0247-4ace-ba2f-eb78dbf12888.jpg?v=1774577850&width=800)
-*The DeerRun Q2 Urban walking pad — compact enough to slide under most standing desks.*
+
+_The DeerRun Q2 Urban walking pad — compact enough to slide under most standing desks._
 
 ## DeerRun Q2 Urban Walking Pad Specs
 
@@ -27,7 +28,8 @@ PLACEHOLDER: add 1-2 sentences on why you personally tested this / who asked abo
 PLACEHOLDER — mô tả thật quá trình mở hộp, lắp đặt mất bao lâu, cảm nhận đầu tiên.
 
 ![DeerRun Q2 Urban Plus walking pad remote control and LED speed display](https://deerruntreadmill.com/cdn/shop/files/1X1BA10-C_45.jpg?v=1768548468&width=800)
-*The remote controls speed and incline without breaking your walking stride.*
+
+_The remote controls speed and incline without breaking your walking stride._
 
 ## How Quiet Is the DeerRun Q2 Urban?
 
