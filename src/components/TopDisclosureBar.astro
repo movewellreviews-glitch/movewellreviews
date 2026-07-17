@@ -1,0 +1,22 @@
+---
+import { DISCLOSURE_SHORT } from '../consts';
+---
+<div class="top-disclosure">
+  <p>{DISCLOSURE_SHORT} <a href="/affiliate-disclosure">Learn more</a>.</p>
+</div>
+
+<style>
+  .top-disclosure {
+    background: var(--color-primary);
+    color: #fff;
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 0.76rem;
+    line-height: 1.4;
+  }
+  .top-disclosure p { margin: 0; max-width: 1160px; margin: 0 auto; }
+  .top-disclosure a { color: #fff; text-decoration: underline; font-weight: 700; }
+  @media (max-width: 640px) {
+    .top-disclosure { font-size: 0.7rem; padding: 7px 12px; }
+  }
+</style>

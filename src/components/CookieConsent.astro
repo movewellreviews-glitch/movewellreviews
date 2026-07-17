@@ -4,46 +4,67 @@
 // Privacy-first analytics (e.g. Plausible) don't require this at all.
 ---
 <div id="cookie-consent" class="cookie-banner" hidden>
-  <p>
-    We use minimal analytics to understand traffic. We do not sell your personal information.
-    See our <a href="/privacy-policy">Privacy Policy</a>.
-  </p>
-  <div class="actions">
-    <button id="cookie-decline" class="btn-ghost">Decline non-essential</button>
-    <button id="cookie-accept" class="btn-primary">Accept</button>
+  <div class="card">
+    <p>
+      We use minimal analytics to understand traffic. We do not sell your personal information.
+      See our <a href="/privacy-policy">Privacy Policy</a>.
+    </p>
+    <div class="actions">
+      <button id="cookie-decline" class="btn-ghost">Decline non-essential</button>
+      <button id="cookie-accept" class="btn-primary">Accept</button>
+    </div>
   </div>
 </div>
 
 <style>
   .cookie-banner {
     position: fixed;
-    bottom: 0;
     left: 0;
     right: 0;
-    z-index: 200;
+    bottom: 16px;
+    z-index: 300;
+    display: flex;
+    justify-content: center;
+    padding: 0 16px;
+    pointer-events: none;
+  }
+  .card {
+    pointer-events: auto;
+    width: 100%;
+    max-width: 620px;
     background: #1a1a1a;
     color: #eee;
     padding: 16px 20px;
+    border-radius: 12px;
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 14px;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 -2px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
   }
-  .cookie-banner p { margin: 0; font-size: 0.85rem; max-width: 640px; }
-  .cookie-banner a { color: #7fd1ae; }
-  .actions { display: flex; gap: 10px; }
+  .card p { margin: 0; font-size: 0.85rem; flex: 1; min-width: 220px; }
+  .card a { color: var(--color-primary-light); }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-primary, .btn-ghost {
-    padding: 8px 16px;
+    padding: 9px 18px;
     border-radius: 6px;
     font-weight: 600;
     font-size: 0.85rem;
     cursor: pointer;
     border: 1px solid transparent;
+    white-space: nowrap;
   }
-  .btn-primary { background: #2f9e6e; color: white; }
+  .btn-primary { background: var(--color-primary); color: white; }
+  .btn-primary:hover { background: var(--color-primary-dark); }
   .btn-ghost { background: transparent; color: #ccc; border-color: #555; }
+
+  @media (max-width: 520px) {
+    .cookie-banner { bottom: 0; padding: 0; }
+    .card { border-radius: 12px 12px 0 0; max-width: 100%; justify-content: center; text-align: center; }
+    .card p { flex: 1 1 100%; }
+    .actions { flex: 1 1 100%; justify-content: center; }
+  }
 </style>
 
 <script>
