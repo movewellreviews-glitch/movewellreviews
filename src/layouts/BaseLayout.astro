@@ -77,6 +77,61 @@ const jsonLdBlocks = Array.isArray(structuredData)
         padding: 0 24px;
       }
       h1, h2, h3 { line-height: 1.25; }
+
+      /* Custom content blocks inserted via the /admin rich-text editor
+         (Buy Box, Table, Callout, Centered Text) — see public/admin/components.js */
+      .buy-box {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        background: var(--color-primary-tint);
+        border: 1px solid var(--color-primary-light);
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin: 20px 0;
+      }
+      .buy-box-name { font-weight: 700; font-size: 1rem; }
+      .buy-box-btn {
+        display: inline-block;
+        background: var(--color-primary);
+        color: white !important;
+        padding: 10px 22px;
+        border-radius: 8px;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .buy-box-btn:hover { background: var(--color-primary-dark); }
+
+      .content-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 0.92rem;
+      }
+      .content-table th, .content-table td {
+        border: 1px solid #e5e5e5;
+        padding: 10px 14px;
+        text-align: left;
+      }
+      .content-table thead th {
+        background: var(--color-primary-tint);
+        font-weight: 700;
+      }
+
+      .callout-box {
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin: 20px 0;
+        line-height: 1.6;
+      }
+      .callout-heading { display: inline; }
+      .callout-orange { background: var(--color-primary-tint); border: 1px solid var(--color-primary-light); }
+      .callout-neutral { background: #f5f5f4; border: 1px solid #e5e5e5; }
+
+      .text-centered { text-align: center; margin: 16px 0; }
     </style>
   </head>
   <body>
