@@ -5,14 +5,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="container not-found">
     <h1>404 — Page not found</h1>
     <p>The page you're looking for doesn't exist or the product isn't published yet.</p>
-    <a href="/" class="btn-primary">Back to home</a>
+    <a href="/" class="btn btn-primary">Back to home</a>
   </section>
 </BaseLayout>
 
 <style>
-  .not-found { padding: 80px 24px; text-align: center; }
-  .btn-primary {
-    display: inline-block; margin-top: 16px; background: var(--color-primary); color: white;
-    padding: 12px 24px; border-radius: 8px; font-weight: 700; text-decoration: none;
-  }
+  .not-found { padding: 100px 24px; text-align: center; }
+  .not-found p { color: var(--color-ink-soft); margin-bottom: 20px; }
 </style>

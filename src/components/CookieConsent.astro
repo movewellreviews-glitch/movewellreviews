@@ -35,23 +35,25 @@
     pointer-events: auto;
     width: 100%;
     max-width: 620px;
-    background: #1a1a1a;
+    background: var(--color-ink);
     color: #eee;
-    padding: 16px 20px;
-    border-radius: 12px;
+    padding: 18px 22px;
+    border-radius: var(--radius-md);
     display: flex;
     flex-wrap: wrap;
     gap: 14px;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+    box-shadow: var(--shadow-lg);
+    font-family: var(--font-body);
   }
   .card p { margin: 0; font-size: 0.85rem; flex: 1; min-width: 220px; }
   .card a { color: var(--color-primary-light); }
   .actions { display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-primary, .btn-ghost {
     padding: 9px 18px;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-heading);
     font-weight: 600;
     font-size: 0.85rem;
     cursor: pointer;

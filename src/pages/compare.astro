@@ -23,7 +23,8 @@ function topSpecLabels(items: CollectionEntry<'products'>[]) {
 }
 ---
 <BaseLayout title="Compare Products" description="Side-by-side comparison of every walking pad and recovery product we've reviewed.">
-  <section class="container header-block">
+  <section class="page-hero">
+    <p class="eyebrow">Side by side</p>
     <h1>Compare</h1>
     <p>Every product we've reviewed, side by side, grouped by category.</p>
   </section>
@@ -43,6 +44,7 @@ function topSpecLabels(items: CollectionEntry<'products'>[]) {
 </BaseLayout>
 
 <style>
-  .header-block { padding: 40px 24px 10px; }
-  .empty { color: #888; }
+  .block { margin: 40px auto; }
+  .block h2 { margin-bottom: 4px; }
+  .empty { color: var(--color-muted); }
 </style>

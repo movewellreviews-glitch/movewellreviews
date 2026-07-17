@@ -31,25 +31,26 @@ const structuredData = {
   description="We tested under-desk treadmills and walking pads for noise, stability, and build quality. Here are our top picks."
   structuredData={structuredData}
 >
-  <section class="container header-block">
-    <h1>Best Walking Pads, Tested &amp; Ranked</h1>
+  <div class="container cathero move">
+    <span class="tag">Move</span>
+    <h1>Walking pads</h1>
     <p>
       We put each walking pad through the same treadmill test: noise at 2 mph next to a laptop mic,
       wobble under load, folding mechanism durability, and app/remote reliability over two weeks of daily use.
     </p>
-  </section>
+  </div>
 
-  <section class="container">
-    <div class="grid">
+  <div class="container catwrap">
+    <div class="catgrid">
       {products.map((p) => <ProductCard product={p} />)}
       {products.length === 0 && (
         <p class="empty">No published walking pads yet — publish some at <a href="/admin">/admin</a>.</p>
       )}
     </div>
-  </section>
+  </div>
 
   {products.length > 1 && (
-    <section class="container">
+    <section class="container cmpsec">
       <h2>Side-by-side comparison</h2>
       <ComparisonTable products={products} specLabels={specLabels} />
     </section>
@@ -57,10 +58,20 @@ const structuredData = {
 </BaseLayout>
 
 <style>
-  .header-block { padding: 40px 24px 10px; max-width: 780px; margin: 0 auto; }
-  .header-block h1 { margin-bottom: 10px; }
-  .header-block p { color: #555; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin: 24px auto 50px; }
-  .empty { color: #888; }
-  h2 { margin-top: 40px; }
+  .cathero { padding: 50px 24px 6px; }
+  .cathero .tag {
+    display: inline-block; font-size: 12.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 5px 12px; border-radius: 100px; color: #fff;
+    margin-bottom: 16px; background: var(--move);
+  }
+  .cathero h1 { font-size: clamp(32px, 4.8vw, 50px); font-weight: 600; margin: 0; }
+  .cathero p { color: var(--ink-soft); font-size: 17px; margin: 12px 0 0; max-width: 56ch; }
+  .catwrap { padding: 30px 24px 60px; }
+  .catgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .empty { color: var(--ink-soft); }
+  .empty a { text-decoration: underline; }
+  .cmpsec { padding-bottom: 80px; }
+  .cmpsec h2 { font-size: clamp(24px, 3vw, 32px); }
+  @media (max-width: 900px) { .catgrid { grid-template-columns: 1fr; } }
 </style>

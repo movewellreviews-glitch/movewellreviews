@@ -6,69 +6,77 @@ interface Props {
   product: CollectionEntry<'products'>;
 }
 const { product } = Astro.props;
-const { brand, name, tagline, coverImage, rating, bestFor, priceNote } = product.data;
+const { brand, name, tagline, coverImage, rating, bestFor, priceNote, category } = product.data;
+const isMove = category === 'walking-pads';
+const score = rating ? (rating * 2).toFixed(1) : null;
 ---
-<article class="product-card">
-  {bestFor && <div class="badge">{bestFor}</div>}
-  <a href={`/reviews/${product.slug}`} class="img-link">
+<article class="card">
+  <a href={`/reviews/${product.slug}`} class="pimg">
     <img src={coverImage || '/images/placeholder-product.svg'} alt={name} loading="lazy" />
   </a>
-  <div class="body">
-    <div class="brand">{brand}</div>
+  <div class="cap">
+    {bestFor ? <span class={`badge ${isMove ? 'move' : 'rec'}`}>{bestFor}</span> : <span class="brand">{brand}</span>}
+    {score && <span class="sc">{score}<small>/10</small></span>}
+  </div>
+  <div class="b">
     <h3><a href={`/reviews/${product.slug}`}>{name}</a></h3>
-    {tagline && <p class="tagline">{tagline}</p>}
-    {rating ? <StarRating rating={rating} /> : null}
-    <div class="cta-row">
-      <a href={`/reviews/${product.slug}`} class="btn-secondary">Read review</a>
+    {rating ? <div class="strow"><StarRating rating={rating} /></div> : null}
+    {priceNote && <div class="pr">{priceNote}</div>}
+    {tagline && <p class="take">{tagline}</p>}
+    <div class="ft">
+      <a href={`/reviews/${product.slug}`} class="read">Read review</a>
       <a
         href={`/go/${product.slug}`}
-        class="btn-primary"
+        class="price"
         rel="sponsored nofollow noopener"
         target="_blank"
       >
-        Check price
+        Check price →
       </a>
     </div>
-    {priceNote && <p class="price-note">{priceNote}</p>}
   </div>
 </article>
 
 <style>
-  .product-card {
-    background: white;
-    border: 1px solid #eee;
-    border-radius: 12px;
+  .card {
+    background: var(--paper);
+    border-radius: 18px;
+    border: 1px solid var(--line);
     overflow: hidden;
-    position: relative;
     display: flex;
     flex-direction: column;
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: transform 0.15s, box-shadow 0.15s;
   }
-  .product-card:hover { box-shadow: 0 10px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 24px 44px -26px rgba(23, 36, 30, 0.35);
+  }
+  .pimg { aspect-ratio: 4/3; background: #fff; position: relative; padding: 8px; display: block; }
+  .pimg img { width: 100%; height: 100%; object-fit: contain; }
+  .cap { padding: 16px 20px 0; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
   .badge {
-    position: absolute; top: 10px; left: 10px;
-    background: var(--color-primary); color: white;
-    font-size: 0.7rem; font-weight: 700;
-    padding: 4px 10px; border-radius: 999px;
-    z-index: 2;
+    font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 6px 12px; border-radius: 100px; color: #fff;
   }
-  .img-link { display: block; background: #f6f7f6; }
-  .img-link img { width: 100%; height: 190px; object-fit: contain; padding: 16px; }
-  .body { padding: 16px; display: flex; flex-direction: column; gap: 6px; }
-  .brand { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: #888; font-weight: 700; }
-  h3 { font-size: 1.02rem; margin: 0; line-height: 1.35; }
-  h3 a { color: #16241a; text-decoration: none; }
-  h3 a:hover { color: var(--color-primary); }
-  .tagline { font-size: 0.85rem; color: #666; margin: 0; }
-  .cta-row { display: flex; gap: 8px; margin-top: 10px; }
-  .btn-primary, .btn-secondary {
-    flex: 1; text-align: center; padding: 9px 10px;
-    border-radius: 7px; font-size: 0.85rem; font-weight: 700;
-    text-decoration: none;
+  .badge.move { background: var(--move); }
+  .badge.rec { background: var(--recover); }
+  .brand { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+  .sc { font-family: var(--font-heading); font-weight: 600; font-size: 19px; }
+  .sc small { font-size: 12px; color: var(--ink-soft); font-family: var(--font-body); }
+  .b { padding: 12px 20px 20px; flex: 1; display: flex; flex-direction: column; }
+  h3 { font-size: 22px; font-weight: 600; margin: 0 0 4px; }
+  h3 a { color: inherit; }
+  h3 a:hover { color: var(--move-deep); }
+  .strow { margin-bottom: 6px; }
+  .pr { font-size: 14px; font-weight: 600; color: var(--ink-soft); margin-bottom: 8px; }
+  .take { color: var(--ink-soft); font-size: 15.5px; margin: 0 0 18px; }
+  .ft { margin-top: auto; display: flex; gap: 10px; }
+  .ft a {
+    flex: 1; text-align: center; font-weight: 600; font-size: 14px;
+    padding: 12px; border-radius: 100px;
   }
-  .btn-primary { background: var(--color-primary); color: white; }
-  .btn-primary:hover { background: var(--color-primary-dark); }
-  .btn-secondary { background: #f1f3f1; color: #16241a; }
-  .btn-secondary:hover { background: #e5e8e5; }
-  .price-note { font-size: 0.72rem; color: #999; margin: 2px 0 0; }
+  .read { border: 1.5px solid var(--line); color: var(--ink); }
+  .read:hover { border-color: var(--ink); }
+  .price { background: var(--amber); color: var(--ink); font-weight: 700; }
+  .price:hover { background: var(--amber-deep); }
 </style>

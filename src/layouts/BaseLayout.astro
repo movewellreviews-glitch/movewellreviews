@@ -35,6 +35,13 @@ const jsonLdBlocks = Array.isArray(structuredData)
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={title} />
@@ -56,27 +63,161 @@ const jsonLdBlocks = Array.isArray(structuredData)
     <style is:global>
       :root {
         color-scheme: light;
-        --color-primary: #ea580c;
-        --color-primary-dark: #c2410c;
-        --color-primary-light: #fb923c;
-        --color-primary-tint: #fff7ed;
+        --bg: #F4F5F0;
+        --paper: #FFFFFF;
+        --ink: #17241E;
+        --ink-soft: #4A564F;
+        --move: #12A15B;
+        --move-deep: #0C6B3F;
+        --recover: #F0812E;
+        --recover-deep: #C55E1E;
+        --sage: #D6E3D3;
+        --line: #E2E4DC;
+        --amber: #F0A82E;
+        --amber-deep: #D98E1C;
+
+        /* Aliases kept so older class names keep working */
+        --color-primary: var(--move);
+        --color-primary-dark: var(--move-deep);
+        --color-primary-light: #4cc389;
+        --color-primary-tint: #EAF5EE;
+        --color-ink: var(--ink);
+        --color-ink-soft: var(--ink-soft);
+        --color-muted: var(--ink-soft);
+        --color-border: var(--line);
+        --color-surface: var(--paper);
+
+        --radius-sm: 10px;
+        --radius-md: 16px;
+        --radius-lg: 22px;
+        --shadow-sm: 0 1px 2px rgba(23, 36, 30, 0.06);
+        --shadow-md: 0 24px 44px -26px rgba(23, 36, 30, 0.35);
+        --shadow-lg: 0 20px 50px -22px rgba(23, 36, 30, 0.28);
+
+        --font-heading: 'Fraunces', Georgia, serif;
+        --font-body: 'Inter', system-ui, sans-serif;
       }
       * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       body {
         margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        color: #1a1a1a;
-        background: #ffffff;
+        font-family: var(--font-body);
+        color: var(--ink);
+        background: var(--bg);
         line-height: 1.6;
+        font-size: 17px;
+        -webkit-font-smoothing: antialiased;
       }
-      a { color: inherit; }
+      a { color: inherit; text-decoration: none; }
       img { max-width: 100%; display: block; }
       .container {
         max-width: 1160px;
         margin: 0 auto;
         padding: 0 24px;
       }
-      h1, h2, h3 { line-height: 1.25; }
+      h1, h2, h3, h4 {
+        font-family: var(--font-heading);
+        font-optical-sizing: auto;
+        font-weight: 600;
+        line-height: 1.15;
+        color: var(--ink);
+      }
+
+      /* Shared eyebrow kicker used above section/page headings */
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-family: var(--font-body);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--move-deep);
+        margin: 0 0 14px;
+      }
+      .eyebrow::before {
+        content: '';
+        width: 26px;
+        height: 2px;
+        background: var(--move);
+        flex-shrink: 0;
+      }
+
+      /* Shared page header used by list/index pages */
+      .page-hero {
+        max-width: 1160px;
+        margin: 0 auto;
+        padding: 56px 24px 20px;
+      }
+      .page-hero h1 { font-size: clamp(34px, 5vw, 54px); margin: 0 0 12px; }
+      .page-hero p { color: var(--ink-soft); font-size: 17px; margin: 0; max-width: 56ch; }
+
+      /* Shared card surface */
+      .card-surface {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+
+      /* Shared pill buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 16px;
+        text-decoration: none;
+        border-radius: 100px;
+        border: none;
+        padding: 15px 28px;
+        cursor: pointer;
+        transition: transform 0.12s, background 0.15s, color 0.15s;
+      }
+      .btn-primary, a.btn-primary {
+        background: var(--move);
+        color: #fff !important;
+        box-shadow: 0 6px 18px rgba(18, 161, 91, 0.28);
+      }
+      .btn-primary:hover, a.btn-primary:hover {
+        transform: translateY(-2px);
+        background: var(--move-deep);
+      }
+      .btn-secondary, a.btn-secondary {
+        background: transparent;
+        color: var(--ink) !important;
+        border: 1.5px solid var(--ink);
+      }
+      .btn-secondary:hover, a.btn-secondary:hover {
+        background: var(--ink);
+        color: #fff !important;
+      }
+      .btn-ghost, a.btn-ghost {
+        background: transparent;
+        color: var(--ink-soft) !important;
+        border: 1px solid var(--line);
+      }
+      .btn-amber, a.btn-amber {
+        background: var(--amber);
+        color: var(--ink) !important;
+        font-weight: 700;
+      }
+      .btn-amber:hover, a.btn-amber:hover { background: var(--amber-deep); }
+      .btn-sm { padding: 11px 20px; font-size: 14px; }
+      .btn-block { width: 100%; }
+
+      /* Section rhythm shared across pages */
+      section.blk { padding: 66px 0; }
+      .head { margin-bottom: 38px; max-width: 52ch; }
+      .head .k {
+        font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+        text-transform: uppercase; color: var(--move-deep);
+        margin-bottom: 12px; display: block;
+      }
+      h2.title { font-size: clamp(30px, 4.2vw, 44px); font-weight: 600; line-height: 1.05; margin: 0; }
+      .head p { color: var(--ink-soft); font-size: 16.5px; margin: 12px 0 0; }
 
       /* Custom content blocks inserted via the /admin rich-text editor
          (Buy Box, Table, Callout, Centered Text) — see public/admin/components.js */
@@ -85,51 +226,52 @@ const jsonLdBlocks = Array.isArray(structuredData)
         flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
-        gap: 14px;
-        background: var(--color-primary-tint);
-        border: 1px solid var(--color-primary-light);
-        border-radius: 10px;
-        padding: 16px 20px;
-        margin: 20px 0;
+        gap: 18px;
+        background: #FAFBF8;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 22px;
+        margin: 24px 0;
       }
-      .buy-box-name { font-weight: 700; font-size: 1rem; }
+      .buy-box-name { font-family: var(--font-heading); font-weight: 600; font-size: 19px; }
       .buy-box-btn {
         display: inline-block;
-        background: var(--color-primary);
+        background: var(--move);
         color: white !important;
-        padding: 10px 22px;
-        border-radius: 8px;
-        font-weight: 700;
+        padding: 13px 24px;
+        border-radius: 100px;
+        font-weight: 600;
         text-decoration: none;
         white-space: nowrap;
       }
-      .buy-box-btn:hover { background: var(--color-primary-dark); }
+      .buy-box-btn:hover { background: var(--move-deep); }
 
       .content-table {
         width: 100%;
         border-collapse: collapse;
-        margin: 20px 0;
-        font-size: 0.92rem;
+        margin: 22px 0;
+        font-size: 15px;
       }
       .content-table th, .content-table td {
-        border: 1px solid #e5e5e5;
-        padding: 10px 14px;
+        border: 1px solid var(--line);
+        padding: 10px 13px;
         text-align: left;
       }
       .content-table thead th {
-        background: var(--color-primary-tint);
-        font-weight: 700;
+        background: var(--sage);
+        font-family: var(--font-heading);
+        font-weight: 600;
       }
 
       .callout-box {
-        border-radius: 10px;
+        border-radius: 16px;
         padding: 16px 20px;
         margin: 20px 0;
         line-height: 1.6;
       }
       .callout-heading { display: inline; }
-      .callout-orange { background: var(--color-primary-tint); border: 1px solid var(--color-primary-light); }
-      .callout-neutral { background: #f5f5f4; border: 1px solid #e5e5e5; }
+      .callout-orange { background: #FBEDE0; border: 1px solid #f0cdae; }
+      .callout-neutral { background: var(--sage); border: 1px solid var(--line); }
 
       .text-centered { text-align: center; margin: 16px 0; }
     </style>

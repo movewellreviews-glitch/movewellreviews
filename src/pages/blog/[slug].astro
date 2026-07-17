@@ -32,29 +32,52 @@ const structuredData = {
   image={post.data.coverImage}
   structuredData={structuredData}
 >
-  <article class="container post">
-    <nav class="breadcrumb"><a href="/blog">Blog</a> / {post.data.title}</nav>
-    <h1>{post.data.title}</h1>
-    <p class="meta">
-      By {post.data.author} · {post.data.publishDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-    </p>
-    {post.data.coverImage && <img class="cover" src={post.data.coverImage} alt={post.data.title} />}
-    <div class="body">
-      <Content />
+  <article class="container article">
+    <div class="postwrap">
+      <div class="cat">Guides</div>
+      <h1>{post.data.title}</h1>
+      <p class="ameta">
+        By {post.data.author} · {post.data.publishDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </p>
+      {post.data.coverImage && (
+        <div class="cov"><img src={post.data.coverImage} alt={post.data.title} /></div>
+      )}
+      <div class="content">
+        <Content />
+      </div>
     </div>
   </article>
 </BaseLayout>
 
 <style>
-  .post { padding: 30px 24px 70px; max-width: 760px; }
-  .breadcrumb { font-size: 0.8rem; color: #888; margin-bottom: 14px; }
-  .breadcrumb a { color: #888; }
-  .meta { color: #888; font-size: 0.85rem; }
-  .cover { border-radius: 12px; margin: 16px 0; }
-  .body { font-size: 1rem; margin-top: 20px; }
-  .body :global(h2) { margin-top: 32px; }
-  .body :global(img) { border-radius: 10px; margin: 20px 0 6px; }
-  .body :global(figure) { margin: 20px 0; }
-  .body :global(figcaption) { font-size: 0.82rem; color: #888; margin-top: 6px; }
-  .body :global(em) { font-size: 0.82rem; color: #888; }
+  .article { padding: 50px 24px 90px; }
+  .postwrap { max-width: 760px; margin: 0 auto; }
+  .cat {
+    font-size: 13px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--move-deep); margin-bottom: 14px;
+  }
+  h1 { font-size: clamp(30px, 4.6vw, 46px); font-weight: 600; line-height: 1.1; margin: 0 0 16px; }
+  .ameta {
+    color: var(--ink-soft); font-size: 14px;
+    margin: 0 0 26px; padding-bottom: 26px; border-bottom: 1px solid var(--line);
+  }
+  .cov {
+    border-radius: 16px; overflow: hidden; background: var(--sage);
+    aspect-ratio: 16/9; margin-bottom: 30px;
+  }
+  .cov img { width: 100%; height: 100%; object-fit: cover; }
+  .content { font-size: 17.5px; line-height: 1.8; color: #26332C; }
+  .content :global(h2) { font-size: 28px; font-weight: 600; margin: 34px 0 12px; }
+  .content :global(h3) { font-size: 22px; font-weight: 600; margin: 26px 0 10px; }
+  .content :global(p) { margin-bottom: 18px; }
+  .content :global(ul), .content :global(ol) { margin: 0 0 18px 22px; padding: 0; }
+  .content :global(li) { margin-bottom: 8px; }
+  .content :global(img) { max-width: 100%; border-radius: 12px; margin: 12px 0; }
+  .content :global(a) { color: var(--move-deep); text-decoration: underline; }
+  .content :global(blockquote) {
+    border-left: 3px solid var(--recover); padding: 6px 18px; margin: 18px 0;
+    color: var(--ink-soft); font-style: italic;
+  }
+  .content :global(figure) { margin: 20px 0; }
+  .content :global(figcaption) { font-size: 13.5px; color: var(--ink-soft); text-align: center; margin-top: 8px; font-style: italic; }
 </style>

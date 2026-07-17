@@ -1,0 +1,93 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import StarRating from './StarRating.astro';
+
+interface Props {
+  product: CollectionEntry<'products'>;
+  rank: number;
+  variant?: 'move' | 'rec';
+}
+const { product, rank, variant = 'move' } = Astro.props;
+const { brand, name, tagline, coverImage, rating, priceNote } = product.data;
+const score = rating ? (rating * 2).toFixed(1) : null;
+---
+<article class={`prow ${variant}`}>
+  <div class="prow-n">{rank}</div>
+  <a href={`/reviews/${product.slug}`} class="prow-im">
+    <img src={coverImage || '/images/placeholder-product.svg'} alt={name} loading="lazy" />
+  </a>
+  <div class="prow-info">
+    <div class="prow-top">
+      <span class="brand">{brand}</span>
+      {score && <span class="sc">{score}<small>/10</small></span>}
+      {rating ? <StarRating rating={rating} /> : null}
+    </div>
+    <h3><a href={`/reviews/${product.slug}`}>{name}</a></h3>
+    {priceNote && <div class="pr">{priceNote}</div>}
+    {tagline && <p class="take">{tagline}</p>}
+  </div>
+  <div class="prow-act">
+    <a href={`/reviews/${product.slug}`} class="read">Read review</a>
+    <a href={`/go/${product.slug}`} class="price" rel="sponsored nofollow noopener" target="_blank">Check price →</a>
+  </div>
+</article>
+
+<style>
+  .prow {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 20px;
+  }
+  .prow-n {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 30px;
+    width: 38px;
+    text-align: center;
+    flex: none;
+    color: var(--move-deep);
+  }
+  .prow.rec .prow-n { color: var(--recover-deep); }
+  .prow-im {
+    width: 152px; height: 120px;
+    border-radius: 12px; overflow: hidden;
+    background: #fff; border: 1px solid var(--line);
+    flex: none; padding: 5px;
+  }
+  .prow-im img { width: 100%; height: 100%; object-fit: contain; }
+  .prow-info { flex: 1; min-width: 0; }
+  .prow-top { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+  .brand { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+  .sc { font-family: var(--font-heading); font-weight: 600; font-size: 17px; }
+  .sc small { font-size: 11px; color: var(--ink-soft); font-family: var(--font-body); }
+  h3 { font-size: 19px; font-weight: 600; line-height: 1.2; margin: 0; }
+  h3 a { color: inherit; }
+  h3 a:hover { color: var(--move-deep); }
+  .pr { font-size: 13.5px; color: var(--ink-soft); font-weight: 600; margin: 3px 0 4px; }
+  .take { font-size: 14.5px; color: var(--ink-soft); margin: 0; }
+  .prow-act { flex: none; display: flex; flex-direction: column; gap: 8px; width: 152px; }
+  .read {
+    border: 1.5px solid var(--line); color: var(--ink);
+    text-align: center; font-weight: 600; font-size: 13px;
+    padding: 9px; border-radius: 100px;
+  }
+  .read:hover { border-color: var(--ink); }
+  .price {
+    background: var(--amber); color: var(--ink);
+    text-align: center; font-weight: 700; font-size: 13px;
+    padding: 9px; border-radius: 100px;
+  }
+  .price:hover { background: var(--amber-deep); }
+  @media (max-width: 720px) {
+    .prow { flex-wrap: wrap; gap: 12px; }
+    .prow-im { width: 112px; height: 92px; }
+    .prow-info { flex-basis: 60%; }
+    .prow-act { width: 100%; flex-direction: row; }
+    .prow-act a { flex: 1; }
+    .prow-n { font-size: 24px; width: 26px; }
+  }
+</style>

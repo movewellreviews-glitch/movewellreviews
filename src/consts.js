@@ -11,12 +11,10 @@ export const SITE = {
 };
 
 export const NAV_LINKS = [
-  { href: '/best/walking-pads', label: 'Best Walking Pads' },
-  { href: '/best/recovery-tools', label: 'Best Recovery Tools' },
-  { href: '/reviews', label: 'All Reviews' },
-  { href: '/compare', label: 'Compare' },
+  { href: '/', label: 'Home' },
+  { href: '/best/walking-pads', label: 'Walking Pads' },
+  { href: '/best/recovery-tools', label: 'Recovery' },
   { href: '/blog', label: 'Blog' },
-  { href: '/about', label: 'About' },
 ];
 
 export const FOOTER_LINKS = [

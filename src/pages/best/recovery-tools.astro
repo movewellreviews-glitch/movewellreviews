@@ -37,35 +37,47 @@ const structuredData = {
   description="Massage guns, compression boots, and mobility tools we've actually used post-workout. Here's what's worth buying."
   structuredData={structuredData}
 >
-  <section class="container header-block">
-    <h1>Best Recovery Tools, Tested &amp; Ranked</h1>
+  <div class="container cathero rec">
+    <span class="tag">Recover</span>
+    <h1>Recovery tools</h1>
     <p>
       Each device here was used consistently after training sessions for at least two weeks — we look at
       perceived soreness reduction, build quality, battery life, and noise.
     </p>
-  </section>
+  </div>
 
   {[...groups.entries()].map(([catName, items]) => (
-    <section class="container block">
+    <section class="container catsec">
       <h2>{catName}</h2>
-      <div class="grid">
+      <div class="catgrid">
         {items.map((p) => <ProductCard product={p} />)}
       </div>
     </section>
   ))}
 
   {products.length === 0 && (
-    <section class="container">
+    <section class="container catwrap">
       <p class="empty">No published recovery products yet — publish some at <a href="/admin">/admin</a>.</p>
     </section>
   )}
 </BaseLayout>
 
 <style>
-  .header-block { padding: 40px 24px 10px; max-width: 780px; margin: 0 auto; }
-  .header-block h1 { margin-bottom: 10px; }
-  .header-block p { color: #555; }
-  .block { margin: 36px auto; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 18px; }
-  .empty { color: #888; }
+  .cathero { padding: 50px 24px 6px; }
+  .cathero .tag {
+    display: inline-block; font-size: 12.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 5px 12px; border-radius: 100px; color: #fff;
+    margin-bottom: 16px; background: var(--recover);
+  }
+  .cathero h1 { font-size: clamp(32px, 4.8vw, 50px); font-weight: 600; margin: 0; }
+  .cathero p { color: var(--ink-soft); font-size: 17px; margin: 12px 0 0; max-width: 56ch; }
+  .catsec { padding: 30px 24px 20px; }
+  .catsec:last-of-type { padding-bottom: 80px; }
+  .catsec h2 { font-size: 24px; margin: 0 0 18px; color: var(--recover-deep); }
+  .catgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .catwrap { padding: 30px 24px 80px; }
+  .empty { color: var(--ink-soft); }
+  .empty a { text-decoration: underline; }
+  @media (max-width: 900px) { .catgrid { grid-template-columns: 1fr; } }
 </style>

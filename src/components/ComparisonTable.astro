@@ -35,8 +35,8 @@ function specValue(product: CollectionEntry<'products'>, label: string) {
           <td>{p.data.rating ? <StarRating rating={p.data.rating} /> : '—'}</td>
           {specLabels.map((label) => <td>{specValue(p, label)}</td>)}
           <td>
-            <a href={`/go/${p.slug}`} class="btn-primary" rel="sponsored nofollow noopener" target="_blank">
-              Check price
+            <a href={`/go/${p.slug}`} class="price" rel="sponsored nofollow noopener" target="_blank">
+              Check price →
             </a>
           </td>
         </tr>
@@ -46,16 +46,33 @@ function specValue(product: CollectionEntry<'products'>, label: string) {
 </div>
 
 <style>
-  .table-wrap { overflow-x: auto; margin: 24px 0; border: 1px solid #eee; border-radius: 10px; }
-  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 0.88rem; }
-  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #eee; white-space: nowrap; }
-  thead th { background: #f7f8f7; font-weight: 700; color: #444; }
-  .product-cell { display: flex; align-items: center; gap: 10px; white-space: normal; min-width: 220px; }
-  .product-cell img { width: 48px; height: 48px; object-fit: contain; background: #f6f7f6; border-radius: 6px; }
-  .brand { font-size: 0.7rem; color: #888; font-weight: 700; text-transform: uppercase; }
-  .product-cell a { color: #16241a; font-weight: 600; text-decoration: none; }
-  .btn-primary {
-    display: inline-block; background: var(--color-primary); color: white;
-    padding: 7px 14px; border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 0.82rem;
+  .table-wrap {
+    overflow-x: auto;
+    margin: 24px 0;
+    border-radius: 16px;
+    border: 1px solid #cfdbcd;
+    background: var(--paper);
   }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14.5px; }
+  th, td { padding: 15px 18px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  thead th {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 15px;
+    background: #F0F4EE;
+    color: var(--ink);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  .product-cell { display: flex; align-items: center; gap: 12px; white-space: normal; min-width: 220px; }
+  .product-cell img { width: 48px; height: 48px; object-fit: contain; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 4px; }
+  .brand { font-size: 11px; color: var(--ink-soft); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .product-cell a { color: var(--ink); font-weight: 600; font-family: var(--font-heading); }
+  .product-cell a:hover { color: var(--move-deep); }
+  .price {
+    display: inline-block; background: var(--amber); color: var(--ink);
+    font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 100px;
+  }
+  .price:hover { background: var(--amber-deep); }
 </style>
