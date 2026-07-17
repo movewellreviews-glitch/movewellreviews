@@ -4,18 +4,18 @@ const blog = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
-    excerpt: z.string().optional(),
-    coverImage: z.string().optional(),
+    excerpt: z.string().nullable().optional(),
+    coverImage: z.string().nullable().optional(),
     author: z.string().default('MoveWell Reviews Team'),
     publishDate: z.coerce.date(),
     draft: z.boolean().default(true),
     seo: z
       .object({
-        title: z.string().optional(),
-        description: z.string().optional(),
-        keyword: z.string().optional(),
+        title: z.string().nullable().optional(),
+        description: z.string().nullable().optional(),
+        keyword: z.string().nullable().optional(),
       })
-      .optional(),
+      .nullable().optional(),
   }),
 });
 
@@ -27,28 +27,28 @@ const products = defineCollection({
     brand: z.string(),
     name: z.string(),
     category: z.enum(CATEGORIES),
-    tagline: z.string().optional(),
-    coverImage: z.string().optional(),
+    tagline: z.string().nullable().optional(),
+    coverImage: z.string().nullable().optional(),
     gallery: z.array(z.string()).default([]),
     rating: z.number().min(0).max(5).default(0),
-    bestFor: z.string().optional(),
+    bestFor: z.string().nullable().optional(),
     specs: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
     pros: z.array(z.string()).default([]),
     cons: z.array(z.string()).default([]),
     affiliateNetwork: z.string().default('amazon'),
     affiliateUrl: z.string(),
     priceNote: z.string().default('Check current price'),
-    testingMethodology: z.string().optional(),
+    testingMethodology: z.string().nullable().optional(),
     author: z.string().default('MoveWell Reviews Team'),
     publishDate: z.coerce.date(),
     published: z.boolean().default(false),
     seo: z
       .object({
-        title: z.string().optional(),
-        description: z.string().optional(),
-        keyword: z.string().optional(),
+        title: z.string().nullable().optional(),
+        description: z.string().nullable().optional(),
+        keyword: z.string().nullable().optional(),
       })
-      .optional(),
+      .nullable().optional(),
   }),
 });
 

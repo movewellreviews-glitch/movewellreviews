@@ -18,6 +18,7 @@ const {
   structuredData,
 } = Astro.props;
 
+const metaDescription = description || SITE.description;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const jsonLdBlocks = Array.isArray(structuredData)
   ? structuredData
@@ -31,7 +32,7 @@ const jsonLdBlocks = Array.isArray(structuredData)
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} | {SITE.name}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={metaDescription} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
@@ -45,7 +46,7 @@ const jsonLdBlocks = Array.isArray(structuredData)
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={metaDescription} />
     <meta property="og:image" content={new URL(image, Astro.site)} />
     <meta property="og:url" content={canonicalURL} />
     <meta name="twitter:card" content="summary_large_image" />
