@@ -25,7 +25,7 @@ priceNote: Check current price
 testingMethodology: Used daily for 2 weeks at standing desk, measured noise with a decibel app at 1/2/3 mph, tested incline on/off
 author: MoveWell Reviews Team
 publishDate: 2026-07-17T12:12
-published: true
+published: false
 seo:
   title: 'DeerRun Q2 Urban Walking Pad Review 2026: Worth It?'
   description: walking pad
