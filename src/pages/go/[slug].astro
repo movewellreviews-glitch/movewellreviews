@@ -1,0 +1,39 @@
+---
+// /go/:slug -> looks up the product's real affiliate URL from the content
+// collection, logs a first-party (no-PII) click event to Supabase, then
+// 302-redirects. Keeping the real destination out of the page HTML is what
+// makes this a "cloaked" affiliate link — a common, TOS-compliant pattern
+// for Amazon Associates and most other affiliate networks. This route must
+// stay server-rendered (not prerendered) so every click is logged.
+export const prerender = false;
+
+import { getCollection } from 'astro:content';
+import { supabase } from '../../lib/supabase';
+
+const { slug } = Astro.params;
+
+const products = await getCollection('products', ({ data }) => data.published);
+const product = products.find((p) => p.slug === slug);
+
+if (!product) {
+  return Astro.redirect('/404', 302);
+}
+
+try {
+  await supabase.from('click_events').insert({
+    affiliate_slug: slug,
+    referrer_path: Astro.request.headers.get('referer') || null,
+    user_agent: Astro.request.headers.get('user-agent') || null,
+  });
+} catch {
+  // never block the redirect on logging failure
+}
+
+return new Response(null, {
+  status: 302,
+  headers: {
+    Location: product.data.affiliateUrl,
+    'Cache-Control': 'no-store',
+  },
+});
+---

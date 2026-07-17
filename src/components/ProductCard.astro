@@ -1,35 +1,27 @@
 ---
+import type { CollectionEntry } from 'astro:content';
 import StarRating from './StarRating.astro';
 
 interface Props {
-  product: {
-    slug: string;
-    brand: string;
-    name: string;
-    tagline?: string;
-    image_url?: string;
-    rating?: number;
-    best_for?: string;
-    affiliate_slug: string;
-    price_note?: string;
-  };
+  product: CollectionEntry<'products'>;
 }
 const { product } = Astro.props;
+const { brand, name, tagline, coverImage, rating, bestFor, priceNote } = product.data;
 ---
 <article class="product-card">
-  {product.best_for && <div class="badge">{product.best_for}</div>}
+  {bestFor && <div class="badge">{bestFor}</div>}
   <a href={`/reviews/${product.slug}`} class="img-link">
-    <img src={product.image_url || '/images/placeholder-product.svg'} alt={product.name} loading="lazy" />
+    <img src={coverImage || '/images/placeholder-product.svg'} alt={name} loading="lazy" />
   </a>
   <div class="body">
-    <div class="brand">{product.brand}</div>
-    <h3><a href={`/reviews/${product.slug}`}>{product.name}</a></h3>
-    {product.tagline && <p class="tagline">{product.tagline}</p>}
-    {product.rating ? <StarRating rating={product.rating} /> : null}
+    <div class="brand">{brand}</div>
+    <h3><a href={`/reviews/${product.slug}`}>{name}</a></h3>
+    {tagline && <p class="tagline">{tagline}</p>}
+    {rating ? <StarRating rating={rating} /> : null}
     <div class="cta-row">
       <a href={`/reviews/${product.slug}`} class="btn-secondary">Read review</a>
       <a
-        href={`/go/${product.affiliate_slug}`}
+        href={`/go/${product.slug}`}
         class="btn-primary"
         rel="sponsored nofollow noopener"
         target="_blank"
@@ -37,7 +29,7 @@ const { product } = Astro.props;
         Check price
       </a>
     </div>
-    {product.price_note && <p class="price-note">{product.price_note}</p>}
+    {priceNote && <p class="price-note">{priceNote}</p>}
   </div>
 </article>
 

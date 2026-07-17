@@ -2,26 +2,23 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import StarRating from '../../components/StarRating.astro';
 import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
-import { supabase } from '../../lib/supabase';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { SITE } from '../../consts';
 
-const { slug } = Astro.params;
+export const prerender = true;
 
-const { data: product } = await supabase
-  .from('products')
-  .select('*, reviews(*)')
-  .eq('slug', slug)
-  .eq('is_published', true)
-  .maybeSingle();
-
-if (!product) {
-  return Astro.redirect('/404');
+export async function getStaticPaths() {
+  const products = await getCollection('products', ({ data }) => data.published);
+  return products.map((product) => ({ params: { slug: product.slug }, props: { product } }));
 }
 
-const review = Array.isArray(product.reviews) ? product.reviews[0] : product.reviews;
-const specs = product.specs || {};
-const pros = product.pros || [];
-const cons = product.cons || [];
+interface Props {
+  product: CollectionEntry<'products'>;
+}
+
+const { product } = Astro.props;
+const { Content } = await product.render();
+const { brand, name, tagline, coverImage, rating, specs, pros, cons, priceNote, testingMethodology, author, publishDate, seo } = product.data;
 
 const structuredData = [
   {
@@ -30,26 +27,26 @@ const structuredData = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
       { '@type': 'ListItem', position: 2, name: 'Reviews', item: `${SITE.url}/reviews` },
-      { '@type': 'ListItem', position: 3, name: product.name, item: `${SITE.url}/reviews/${product.slug}` },
+      { '@type': 'ListItem', position: 3, name: name, item: `${SITE.url}/reviews/${product.slug}` },
     ],
   },
   {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: product.name,
-    brand: { '@type': 'Brand', name: product.brand },
-    image: product.image_url ? new URL(product.image_url, SITE.url).toString() : undefined,
-    description: product.tagline,
-    ...(product.rating
+    name,
+    brand: { '@type': 'Brand', name: brand },
+    image: coverImage ? new URL(coverImage, SITE.url).toString() : undefined,
+    description: tagline,
+    ...(rating
       ? {
           review: {
             '@type': 'Review',
-            reviewRating: { '@type': 'Rating', ratingValue: product.rating, bestRating: '5' },
-            author: { '@type': 'Organization', name: review?.author || 'MoveWell Reviews Team' },
+            reviewRating: { '@type': 'Rating', ratingValue: rating, bestRating: '5' },
+            author: { '@type': 'Organization', name: author },
           },
           aggregateRating: {
             '@type': 'AggregateRating',
-            ratingValue: product.rating,
+            ratingValue: rating,
             bestRating: '5',
             ratingCount: 1,
           },
@@ -59,27 +56,27 @@ const structuredData = [
 ];
 ---
 <BaseLayout
-  title={`${product.name} Review`}
-  description={product.tagline || `Our hands-on review of the ${product.name}.`}
-  image={product.image_url}
+  title={seo?.title || `${name} Review`}
+  description={seo?.description || tagline || `Our hands-on review of the ${name}.`}
+  image={coverImage}
   structuredData={structuredData}
 >
   <article class="container review">
-    <nav class="breadcrumb"><a href="/reviews">Reviews</a> / {product.name}</nav>
+    <nav class="breadcrumb"><a href="/reviews">Reviews</a> / {name}</nav>
 
     <header class="review-header">
-      <img src={product.image_url || '/images/placeholder-product.svg'} alt={product.name} class="hero-img" />
+      <img src={coverImage || '/images/placeholder-product.svg'} alt={name} class="hero-img" />
       <div>
-        <div class="brand">{product.brand}</div>
-        <h1>{product.name}</h1>
-        {product.tagline && <p class="tagline">{product.tagline}</p>}
-        {product.rating ? <StarRating rating={product.rating} /> : null}
+        <div class="brand">{brand}</div>
+        <h1>{name}</h1>
+        {tagline && <p class="tagline">{tagline}</p>}
+        {rating ? <StarRating rating={rating} /> : null}
         <div class="cta-row">
-          <a href={`/go/${product.affiliate_slug}`} class="btn-primary" rel="sponsored nofollow noopener" target="_blank">
+          <a href={`/go/${product.slug}`} class="btn-primary" rel="sponsored nofollow noopener" target="_blank">
             Check current price
           </a>
         </div>
-        {product.price_note && <p class="price-note">{product.price_note}</p>}
+        {priceNote && <p class="price-note">{priceNote}</p>}
       </div>
     </header>
 
@@ -89,41 +86,41 @@ const structuredData = [
       <section class="pros-cons">
         <div>
           <h2>Pros</h2>
-          <ul>{pros.map((p: string) => <li>{p}</li>)}</ul>
+          <ul>{pros.map((p) => <li>{p}</li>)}</ul>
         </div>
         <div>
           <h2>Cons</h2>
-          <ul>{cons.map((c: string) => <li>{c}</li>)}</ul>
+          <ul>{cons.map((c) => <li>{c}</li>)}</ul>
         </div>
       </section>
     )}
 
-    {Object.keys(specs).length > 0 && (
+    {specs.length > 0 && (
       <section>
         <h2>Specs</h2>
         <table class="specs">
           <tbody>
-            {Object.entries(specs).map(([k, v]) => (
-              <tr><th>{k.replaceAll('_', ' ')}</th><td>{v as string}</td></tr>
+            {specs.map((s) => (
+              <tr><th>{s.label}</th><td>{s.value}</td></tr>
             ))}
           </tbody>
         </table>
       </section>
     )}
 
-    {review?.body_html && (
-      <section class="body" set:html={review.body_html} />
-    )}
+    <section class="body">
+      <Content />
+    </section>
 
-    {review?.testing_methodology && (
+    {testingMethodology && (
       <section class="methodology">
         <h2>How we tested it</h2>
-        <p>{review.testing_methodology}</p>
+        <p>{testingMethodology}</p>
       </section>
     )}
 
     <p class="updated">
-      Last updated: {new Date(review?.last_updated || product.updated_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+      Last updated: {publishDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
     </p>
   </article>
 </BaseLayout>
@@ -147,8 +144,10 @@ const structuredData = [
   .pros-cons ul { padding-left: 20px; margin: 8px 0; }
   .specs { width: 100%; border-collapse: collapse; margin: 14px 0 28px; }
   .specs th, .specs td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #eee; font-size: 0.88rem; }
-  .specs th { color: #666; font-weight: 600; text-transform: capitalize; width: 40%; }
+  .specs th { color: #666; font-weight: 600; width: 40%; }
   .body { margin: 24px 0; font-size: 0.98rem; }
+  .body :global(img) { border-radius: 10px; margin: 20px 0 6px; }
+  .body :global(h2) { margin-top: 32px; }
   .methodology { background: #f7f8f7; border-radius: 10px; padding: 18px 20px; margin: 24px 0; }
   .updated { font-size: 0.78rem; color: #999; }
   @media (max-width: 560px) {

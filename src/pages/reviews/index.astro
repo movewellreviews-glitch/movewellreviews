@@ -2,13 +2,12 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
-import { supabase } from '../../lib/supabase';
+import { getCollection } from 'astro:content';
 
-const { data: products } = await supabase
-  .from('products')
-  .select('slug,brand,name,tagline,image_url,rating,best_for,affiliate_slug,price_note')
-  .eq('is_published', true)
-  .order('rating', { ascending: false });
+export const prerender = true;
+
+const allProducts = await getCollection('products', ({ data }) => data.published);
+const products = allProducts.sort((a, b) => b.data.rating - a.data.rating);
 ---
 <BaseLayout title="All Reviews" description="Every product we've tested and reviewed, walking pads and recovery gear alike.">
   <section class="container header-block">
@@ -19,9 +18,9 @@ const { data: products } = await supabase
 
   <section class="container">
     <div class="grid">
-      {(products ?? []).map((p) => <ProductCard product={p} />)}
-      {(!products || products.length === 0) && (
-        <p class="empty">No published reviews yet. Add products in Supabase and set is_published = true.</p>
+      {products.map((p) => <ProductCard product={p} />)}
+      {products.length === 0 && (
+        <p class="empty">No published reviews yet. Add products at <a href="/admin">/admin</a>.</p>
       )}
     </div>
   </section>

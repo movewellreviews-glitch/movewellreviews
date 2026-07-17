@@ -3,31 +3,27 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import ComparisonTable from '../../components/ComparisonTable.astro';
 import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
-import { supabase } from '../../lib/supabase';
+import { getCollection } from 'astro:content';
 import { SITE } from '../../consts';
 
-const { data: products } = await supabase
-  .from('products')
-  .select('slug,brand,name,tagline,image_url,rating,best_for,affiliate_slug,price_note,specs,categories!inner(slug)')
-  .eq('is_published', true)
-  .eq('categories.slug', 'walking-pads')
-  .order('rating', { ascending: false });
+export const prerender = true;
 
-const specKeys = [
-  { key: 'speed_range', label: 'Speed range' },
-  { key: 'weight_capacity', label: 'Weight capacity' },
-  { key: 'noise_level', label: 'Noise level' },
-  { key: 'dimensions_folded', label: 'Folded size' },
-];
+const allProducts = await getCollection(
+  'products',
+  ({ data }) => data.published && data.category === 'walking-pads'
+);
+const products = allProducts.sort((a, b) => b.data.rating - a.data.rating);
+
+const specLabels = ['Speed range', 'Weight capacity', 'Noise level', 'Dimensions'];
 
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  itemListElement: (products ?? []).map((p, i) => ({
+  itemListElement: products.map((p, i) => ({
     '@type': 'ListItem',
     position: i + 1,
     url: `${SITE.url}/reviews/${p.slug}`,
-    name: p.name,
+    name: p.data.name,
   })),
 };
 ---
@@ -47,17 +43,17 @@ const structuredData = {
 
   <section class="container">
     <div class="grid">
-      {(products ?? []).map((p) => <ProductCard product={p} />)}
-      {(!products || products.length === 0) && (
-        <p class="empty">No published walking pads yet — publish some in Supabase to populate this page.</p>
+      {products.map((p) => <ProductCard product={p} />)}
+      {products.length === 0 && (
+        <p class="empty">No published walking pads yet — publish some at <a href="/admin">/admin</a>.</p>
       )}
     </div>
   </section>
 
-  {products && products.length > 1 && (
+  {products.length > 1 && (
     <section class="container">
       <h2>Side-by-side comparison</h2>
-      <ComparisonTable products={products} specKeys={specKeys} />
+      <ComparisonTable products={products} specLabels={specLabels} />
     </section>
   )}
 </BaseLayout>

@@ -3,25 +3,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import AffiliateDisclosure from '../components/AffiliateDisclosure.astro';
 import Newsletter from '../components/Newsletter.astro';
-import { supabase } from '../lib/supabase';
 import { getCollection } from 'astro:content';
 import { SITE } from '../consts';
 
-const { data: walkingPads } = await supabase
-  .from('products')
-  .select('slug,brand,name,tagline,image_url,rating,best_for,affiliate_slug,price_note,categories!inner(slug)')
-  .eq('is_published', true)
-  .eq('categories.slug', 'walking-pads')
-  .order('rating', { ascending: false })
-  .limit(3);
+export const prerender = true;
 
-const { data: recovery } = await supabase
-  .from('products')
-  .select('slug,brand,name,tagline,image_url,rating,best_for,affiliate_slug,price_note,categories!inner(slug)')
-  .eq('is_published', true)
-  .in('categories.slug', ['massage-guns', 'compression', 'foam-rollers'])
-  .order('rating', { ascending: false })
-  .limit(3);
+const RECOVERY_CATEGORIES = ['massage-guns', 'compression', 'foam-rollers'];
+
+const allProducts = await getCollection('products', ({ data }) => data.published);
+const walkingPads = allProducts
+  .filter((p) => p.data.category === 'walking-pads')
+  .sort((a, b) => b.data.rating - a.data.rating)
+  .slice(0, 3);
+const recovery = allProducts
+  .filter((p) => RECOVERY_CATEGORIES.includes(p.data.category))
+  .sort((a, b) => b.data.rating - a.data.rating)
+  .slice(0, 3);
 
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 const posts = allPosts
@@ -49,8 +46,8 @@ const posts = allPosts
     </div>
     <div class="grid">
       {(walkingPads ?? []).map((p) => <ProductCard product={p} />)}
-      {(!walkingPads || walkingPads.length === 0) && (
-        <p class="empty">No products published yet — add some in Supabase to see them here.</p>
+      {walkingPads.length === 0 && (
+        <p class="empty">No products published yet — add some at <a href="/admin">/admin</a>.</p>
       )}
     </div>
   </section>
@@ -62,8 +59,8 @@ const posts = allPosts
     </div>
     <div class="grid">
       {(recovery ?? []).map((p) => <ProductCard product={p} />)}
-      {(!recovery || recovery.length === 0) && (
-        <p class="empty">No products published yet — add some in Supabase to see them here.</p>
+      {recovery.length === 0 && (
+        <p class="empty">No products published yet — add some at <a href="/admin">/admin</a>.</p>
       )}
     </div>
   </section>

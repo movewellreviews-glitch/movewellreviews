@@ -2,30 +2,26 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ComparisonTable from '../components/ComparisonTable.astro';
 import AffiliateDisclosure from '../components/AffiliateDisclosure.astro';
-import { supabase } from '../lib/supabase';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { CATEGORY_LABELS } from '../consts';
 
-const { data: categories } = await supabase.from('categories').select('slug,name').order('name');
+export const prerender = true;
 
-const { data: products } = await supabase
-  .from('products')
-  .select('slug,brand,name,image_url,rating,affiliate_slug,specs,categories(slug,name)')
-  .eq('is_published', true)
-  .order('rating', { ascending: false });
+const allProducts = await getCollection('products', ({ data }) => data.published);
+const products = allProducts.sort((a, b) => b.data.rating - a.data.rating);
 
-const byCategory = new Map<string, any[]>();
-for (const p of products ?? []) {
-  const cat = (p as any).categories?.name ?? 'Other';
-  if (!byCategory.has(cat)) byCategory.set(cat, []);
-  byCategory.get(cat)!.push(p);
+const groups = new Map<string, CollectionEntry<'products'>[]>();
+for (const p of products) {
+  const catLabel = CATEGORY_LABELS[p.data.category] ?? p.data.category;
+  if (!groups.has(catLabel)) groups.set(catLabel, []);
+  groups.get(catLabel)!.push(p);
 }
 
-const specKeysByCategory: Record<string, Array<{ key: string; label: string }>> = {
-  'Walking Pads': [
-    { key: 'speed_range', label: 'Speed range' },
-    { key: 'weight_capacity', label: 'Weight capacity' },
-    { key: 'noise_level', label: 'Noise level' },
-  ],
-};
+function topSpecLabels(items: CollectionEntry<'products'>[]) {
+  const labels = new Set<string>();
+  for (const p of items) for (const s of p.data.specs) labels.add(s.label);
+  return [...labels].slice(0, 4);
+}
 ---
 <BaseLayout title="Compare Products" description="Side-by-side comparison of every walking pad and recovery product we've reviewed.">
   <section class="container header-block">
@@ -34,19 +30,16 @@ const specKeysByCategory: Record<string, Array<{ key: string; label: string }>> 
     <AffiliateDisclosure compact />
   </section>
 
-  {[...byCategory.entries()].map(([catName, items]) => (
+  {[...groups.entries()].map(([catName, items]) => (
     <section class="container block">
       <h2>{catName}</h2>
-      <ComparisonTable
-        products={items}
-        specKeys={specKeysByCategory[catName] ?? [{ key: 'weight_capacity', label: 'Key spec' }]}
-      />
+      <ComparisonTable products={items} specLabels={topSpecLabels(items)} />
     </section>
   ))}
 
-  {(!products || products.length === 0) && (
+  {products.length === 0 && (
     <section class="container">
-      <p class="empty">No published products yet — publish some in Supabase to populate this page.</p>
+      <p class="empty">No published products yet — publish some at <a href="/admin">/admin</a>.</p>
     </section>
   )}
 </BaseLayout>

@@ -3,15 +3,71 @@ backend:
   repo: movewellreviews-glitch/movewellreviews
   branch: main
 
-media_folder: "public/images/blog"
-public_folder: "/images/blog"
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
 
 collections:
+  - name: "products"
+    label: "Products & Reviews"
+    label_singular: "Product"
+    folder: "src/content/products"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{brand}} {{name}} — {{fields.published}}"
+    fields:
+      - { label: "Brand", name: "brand", widget: "string" }
+      - { label: "Product Name", name: "name", widget: "string" }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "Walking Pads", value: "walking-pads" }
+          - { label: "Massage Guns", value: "massage-guns" }
+          - { label: "Compression Recovery", value: "compression" }
+          - { label: "Foam Rollers & Mobility", value: "foam-rollers" }
+      - { label: "Tagline (short, under product name)", name: "tagline", widget: "string", required: false }
+      - { label: "Cover Image", name: "coverImage", widget: "image", required: false }
+      - { label: "Extra Photos (gallery)", name: "gallery", widget: "list", field: { label: "Image", name: "src", widget: "image" }, required: false }
+      - { label: "Your Rating (0-5)", name: "rating", widget: "number", value_type: "float", min: 0, max: 5, default: 0 }
+      - { label: "Best For (badge text, e.g. \"Best overall\")", name: "bestFor", widget: "string", required: false }
+      - label: "Specs"
+        name: "specs"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Spec name (e.g. Speed range)", name: "label", widget: "string" }
+          - { label: "Value (e.g. 0.6-3.8 mph)", name: "value", widget: "string" }
+      - { label: "Pros", name: "pros", widget: "list", field: { label: "Pro", name: "item", widget: "string" }, required: false }
+      - { label: "Cons", name: "cons", widget: "list", field: { label: "Con", name: "item", widget: "string" }, required: false }
+      - label: "Affiliate Network"
+        name: "affiliateNetwork"
+        widget: "select"
+        options: ["amazon", "shareasale", "impact", "cj", "direct"]
+        default: "amazon"
+      - { label: "Affiliate URL (your real tracking link)", name: "affiliateUrl", widget: "string" }
+      - { label: "Price note", name: "priceNote", widget: "string", default: "Check current price" }
+      - { label: "Testing Methodology (how you actually tested this)", name: "testingMethodology", widget: "text", required: false }
+      - { label: "Author", name: "author", widget: "string", default: "MoveWell Reviews Team" }
+      - { label: "Publish Date", name: "publishDate", widget: "datetime" }
+      - { label: "Published (uncheck to hide from the live site)", name: "published", widget: "boolean", default: false }
+      - label: "SEO"
+        name: "seo"
+        widget: "object"
+        collapsed: true
+        required: false
+        fields:
+          - { label: "SEO Title (overrides page title if set)", name: "title", widget: "string", required: false }
+          - { label: "Meta Description (~150-160 characters)", name: "description", widget: "text", required: false }
+          - { label: "Focus Keyword", name: "keyword", widget: "string", required: false }
+      - { label: "Full Review", name: "body", widget: "markdown" }
+
   - name: "blog"
     label: "Blog Posts"
+    label_singular: "Blog Post"
     folder: "src/content/blog"
     create: true
     slug: "{{slug}}"
+    summary: "{{title}} — {{fields.draft}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Excerpt (SEO meta description, ~150-160 characters)", name: "excerpt", widget: "text", required: false }
@@ -19,4 +75,13 @@ collections:
       - { label: "Author", name: "author", widget: "string", default: "MoveWell Reviews Team" }
       - { label: "Publish Date", name: "publishDate", widget: "datetime" }
       - { label: "Draft (uncheck to publish live)", name: "draft", widget: "boolean", default: true }
+      - label: "SEO"
+        name: "seo"
+        widget: "object"
+        collapsed: true
+        required: false
+        fields:
+          - { label: "SEO Title (overrides page title if set)", name: "title", widget: "string", required: false }
+          - { label: "Meta Description", name: "description", widget: "text", required: false }
+          - { label: "Focus Keyword", name: "keyword", widget: "string", required: false }
       - { label: "Body", name: "body", widget: "markdown" }

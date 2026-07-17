@@ -30,3 +30,10 @@ export const FOOTER_LINKS = [
 // disclosures must be "clear and conspicuous," not buried only in a footer link.
 export const DISCLOSURE_SHORT =
   'MoveWell Reviews is reader-supported. As an Amazon Associate and participant in other affiliate programs, we earn from qualifying purchases at no extra cost to you. This does not influence our ratings.';
+
+export const CATEGORY_LABELS = {
+  'walking-pads': 'Walking Pads',
+  'massage-guns': 'Massage Guns',
+  compression: 'Compression Recovery',
+  'foam-rollers': 'Foam Rollers & Mobility',
+};
