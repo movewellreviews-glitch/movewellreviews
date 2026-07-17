@@ -1,0 +1,22 @@
+backend:
+  name: github
+  repo: movewellreviews-glitch/movewellreviews
+  branch: main
+
+media_folder: "public/images/blog"
+public_folder: "/images/blog"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Excerpt (SEO meta description, ~150-160 characters)", name: "excerpt", widget: "text", required: false }
+      - { label: "Cover Image", name: "coverImage", widget: "image", required: false }
+      - { label: "Author", name: "author", widget: "string", default: "MoveWell Reviews Team" }
+      - { label: "Publish Date", name: "publishDate", widget: "datetime" }
+      - { label: "Draft (uncheck to publish live)", name: "draft", widget: "boolean", default: true }
+      - { label: "Body", name: "body", widget: "markdown" }
