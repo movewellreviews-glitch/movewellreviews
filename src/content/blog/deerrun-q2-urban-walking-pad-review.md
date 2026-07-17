@@ -4,7 +4,7 @@ excerpt: An in-depth review of the DeerRun Q2 Urban under-desk walking pad — s
 coverImage: https://deerruntreadmill.com/cdn/shop/files/BA10_45.jpg?v=1766744659&width=800
 author: MoveWell Reviews Team
 publishDate: 2026-07-17T12:24
-draft: true
+draft: false
 ---
 
 If you work from home and want to walk more without leaving your desk, the **DeerRun Q2 Urban Smart Walking Pad** is one of the most talked-about under-desk treadmills right now — mainly because of its 7% incline, a feature most budget walking pads skip entirely.
