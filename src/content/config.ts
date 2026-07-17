@@ -7,7 +7,7 @@ const blog = defineCollection({
     excerpt: z.string().optional(),
     coverImage: z.string().optional(),
     author: z.string().default('MoveWell Reviews Team'),
-    publishDate: z.date(),
+    publishDate: z.coerce.date(),
     draft: z.boolean().default(true),
     seo: z
       .object({
@@ -40,7 +40,7 @@ const products = defineCollection({
     priceNote: z.string().default('Check current price'),
     testingMethodology: z.string().optional(),
     author: z.string().default('MoveWell Reviews Team'),
-    publishDate: z.date(),
+    publishDate: z.coerce.date(),
     published: z.boolean().default(false),
     seo: z
       .object({
