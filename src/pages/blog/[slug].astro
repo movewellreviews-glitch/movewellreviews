@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
 import { supabase } from '../../lib/supabase';
 import { SITE } from '../../consts';
 
@@ -36,6 +37,7 @@ const structuredData = {
       </p>
     )}
     {post.cover_image_url && <img class="cover" src={post.cover_image_url} alt={post.title} />}
+    <AffiliateDisclosure compact />
     <div class="body" set:html={post.body_html} />
   </article>
 </BaseLayout>
