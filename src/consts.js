@@ -15,7 +15,7 @@ export const NAV_LINKS = [
   { href: '/best/recovery-tools', label: 'Best Recovery Tools' },
   { href: '/reviews', label: 'All Reviews' },
   { href: '/compare', label: 'Compare' },
-  { href: '/blog', label: 'Guides' },
+  { href: '/blog', label: 'Blog' },
   { href: '/about', label: 'About' },
 ];
 
