@@ -1,10 +1,10 @@
 ---
 title: ádada
 excerpt: ádasdasdad
-coverImage: ''
+coverImage: https://deerruntreadmill.com/cdn/shop/files/Affiliate-Program__05.jpg?v=1763444542&width=2000
 author: MoveWell Reviews Team
 publishDate: 2026-07-17T13:36
-draft: false
+draft: true
 seo: null
 ---
 
