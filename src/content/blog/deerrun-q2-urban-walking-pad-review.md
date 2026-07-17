@@ -3,7 +3,7 @@ title: 'DeerRun Q2 Urban Walking Pad Review 2026: Is It Worth It?'
 excerpt: An in-depth review of the DeerRun Q2 Urban under-desk walking pad — specs, real-world noise level, incline performance, and who it's actually worth buying for.
 coverImage: https://deerruntreadmill.com/cdn/shop/files/BA10_45.jpg?v=1766744659&width=800
 author: MoveWell Reviews Team
-publishDate: 2026-07-17
+publishDate: 2026-07-17T12:24
 draft: true
 ---
 
