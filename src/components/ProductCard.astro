@@ -1,21 +1,22 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import StarRating from './StarRating.astro';
+import { accentForCategory } from '../consts';
 
 interface Props {
   product: CollectionEntry<'products'>;
 }
 const { product } = Astro.props;
 const { brand, name, tagline, coverImage, rating, bestFor, priceNote, category } = product.data;
-const isMove = category === 'walking-pads';
+const accent = accentForCategory(category);
 const score = rating ? (rating * 2).toFixed(1) : null;
 ---
-<article class="card">
+<article class={`card ac-${accent}`}>
   <a href={`/reviews/${product.slug}`} class="pimg">
     <img src={coverImage || '/images/placeholder-product.svg'} alt={name} loading="lazy" />
   </a>
   <div class="cap">
-    {bestFor ? <span class={`badge ${isMove ? 'move' : 'rec'}`}>{bestFor}</span> : <span class="brand">{brand}</span>}
+    {bestFor ? <span class="badge">{bestFor}</span> : <span class="brand">{brand}</span>}
     {score && <span class="sc">{score}<small>/10</small></span>}
   </div>
   <div class="b">
@@ -56,17 +57,15 @@ const score = rating ? (rating * 2).toFixed(1) : null;
   .cap { padding: 16px 20px 0; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
   .badge {
     font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
-    padding: 6px 12px; border-radius: 100px; color: #fff;
+    padding: 6px 12px; border-radius: 100px; color: #fff; background: var(--ac);
   }
-  .badge.move { background: var(--move); }
-  .badge.rec { background: var(--recover); }
   .brand { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
   .sc { font-family: var(--font-heading); font-weight: 600; font-size: 19px; }
   .sc small { font-size: 12px; color: var(--ink-soft); font-family: var(--font-body); }
   .b { padding: 12px 20px 20px; flex: 1; display: flex; flex-direction: column; }
   h3 { font-size: 22px; font-weight: 600; margin: 0 0 4px; }
   h3 a { color: inherit; }
-  h3 a:hover { color: var(--move-deep); }
+  h3 a:hover { color: var(--ac-deep); }
   .strow { margin-bottom: 6px; }
   .pr { font-size: 14px; font-weight: 600; color: var(--ink-soft); margin-bottom: 8px; }
   .take { color: var(--ink-soft); font-size: 15.5px; margin: 0 0 18px; }

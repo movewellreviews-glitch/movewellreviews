@@ -1,0 +1,51 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE, LEGAL } from '../consts';
+---
+<LegalLayout title="Disclaimer" description="Health, fitness, and general disclaimers for MoveWell Reviews.">
+  <p class="lead">
+    The information on {SITE.name} ({SITE.domain}) is provided for general informational and
+    educational purposes only.
+  </p>
+
+  <h2>Not medical or fitness advice</h2>
+  <p>
+    Content on this site is <strong>not medical, health, or professional fitness advice</strong> and
+    is not a substitute for consultation with a qualified healthcare provider. Exercise and recovery
+    equipment carry inherent risks. Always consult a physician before beginning a new exercise,
+    walking, strength, or recovery routine — especially if you are pregnant, have a heart condition,
+    an injury, or any pre-existing medical condition. Stop and seek medical attention if you
+    experience pain, dizziness, or discomfort.
+  </p>
+
+  <h2>Use at your own risk</h2>
+  <p>
+    You are responsible for using any product safely and according to the manufacturer's instructions.
+    {LEGAL.entity} is not responsible for injury, loss, or damage resulting from the use or misuse of
+    any product mentioned on this site.
+  </p>
+
+  <h2>No guarantee of results</h2>
+  <p>
+    Individual results from any equipment or routine vary. Nothing on this site guarantees a specific
+    health, fitness, weight, or performance outcome.
+  </p>
+
+  <h2>Accuracy &amp; pricing</h2>
+  <p>
+    We work to keep information accurate but make no warranty that it is complete, current, or
+    error-free. Prices and availability are controlled by third-party retailers and change frequently;
+    verify all details on the merchant's site before purchasing. See our
+    <a href="/terms">Terms of Use</a>.
+  </p>
+
+  <h2>Affiliate links</h2>
+  <p>
+    This site contains affiliate links — see our <a href="/affiliate-disclosure">Affiliate Disclosure</a>.
+  </p>
+
+  <h2>External links</h2>
+  <p>
+    We are not responsible for the content or practices of third-party websites linked from this site.
+  </p>
+</LegalLayout>

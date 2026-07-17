@@ -1,17 +1,18 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import StarRating from './StarRating.astro';
+import { accentForCategory } from '../consts';
 
 interface Props {
   product: CollectionEntry<'products'>;
   rank: number;
-  variant?: 'move' | 'rec';
 }
-const { product, rank, variant = 'move' } = Astro.props;
-const { brand, name, tagline, coverImage, rating, priceNote } = product.data;
+const { product, rank } = Astro.props;
+const { brand, name, tagline, coverImage, rating, priceNote, category } = product.data;
+const accent = accentForCategory(category);
 const score = rating ? (rating * 2).toFixed(1) : null;
 ---
-<article class={`prow ${variant}`}>
+<article class={`prow ac-${accent}`}>
   <div class="prow-n">{rank}</div>
   <a href={`/reviews/${product.slug}`} class="prow-im">
     <img src={coverImage || '/images/placeholder-product.svg'} alt={name} loading="lazy" />
@@ -49,9 +50,8 @@ const score = rating ? (rating * 2).toFixed(1) : null;
     width: 38px;
     text-align: center;
     flex: none;
-    color: var(--move-deep);
+    color: var(--ac-deep);
   }
-  .prow.rec .prow-n { color: var(--recover-deep); }
   .prow-im {
     width: 152px; height: 120px;
     border-radius: 12px; overflow: hidden;
@@ -66,7 +66,7 @@ const score = rating ? (rating * 2).toFixed(1) : null;
   .sc small { font-size: 11px; color: var(--ink-soft); font-family: var(--font-body); }
   h3 { font-size: 19px; font-weight: 600; line-height: 1.2; margin: 0; }
   h3 a { color: inherit; }
-  h3 a:hover { color: var(--move-deep); }
+  h3 a:hover { color: var(--ac-deep); }
   .pr { font-size: 13.5px; color: var(--ink-soft); font-weight: 600; margin: 3px 0 4px; }
   .take { font-size: 14.5px; color: var(--ink-soft); margin: 0; }
   .prow-act { flex: none; display: flex; flex-direction: column; gap: 8px; width: 152px; }

@@ -72,6 +72,10 @@ const jsonLdBlocks = Array.isArray(structuredData)
         --move-deep: #0C6B3F;
         --recover: #F0812E;
         --recover-deep: #C55E1E;
+        --strength: #12868A;
+        --strength-deep: #0C5F62;
+        --wearable: #6C5CE0;
+        --wearable-deep: #4B3FB0;
         --sage: #D6E3D3;
         --line: #E2E4DC;
         --amber: #F0A82E;
@@ -123,6 +127,14 @@ const jsonLdBlocks = Array.isArray(structuredData)
         line-height: 1.15;
         color: var(--ink);
       }
+
+      /* Accent scopes — set a hub's color on a container, children read var(--ac).
+         Used by product cards/rows, category pills, and the /best/<hub> pages. */
+      .ac-move { --ac: var(--move); --ac-deep: var(--move-deep); --ac-soft: #EAF5EE; }
+      .ac-recover { --ac: var(--recover); --ac-deep: var(--recover-deep); --ac-soft: #FBEDE0; }
+      .ac-strength { --ac: var(--strength); --ac-deep: var(--strength-deep); --ac-soft: #E1F0F0; }
+      .ac-wearable { --ac: var(--wearable); --ac-deep: var(--wearable-deep); --ac-soft: #ECE9FB; }
+      :root { --ac: var(--move); --ac-deep: var(--move-deep); --ac-soft: #EAF5EE; }
 
       /* Shared eyebrow kicker used above section/page headings */
       .eyebrow {

@@ -8,10 +8,11 @@ export const prerender = true;
 const allProducts = await getCollection('products', ({ data }) => data.published);
 const products = allProducts.sort((a, b) => b.data.rating - a.data.rating);
 ---
-<BaseLayout title="All Reviews" description="Every product we've tested and reviewed, walking pads and recovery gear alike.">
+<BaseLayout title="All Reviews" description="Every product we've tested — walking pads, recovery tools, home-gym gear, and wearables.">
   <div class="page-hero">
+    <p class="eyebrow">Everything we've tested</p>
     <h1>All Reviews</h1>
-    <p>Every product we've bought and tested ourselves.</p>
+    <p>Every product we've bought and tested ourselves, across all four categories.</p>
   </div>
 
   <section class="container catwrap">

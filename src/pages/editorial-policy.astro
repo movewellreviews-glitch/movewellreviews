@@ -1,0 +1,65 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE, LEGAL } from '../consts';
+---
+<LegalLayout title="Editorial Policy" description="How MoveWell Reviews chooses, tests, scores, and updates the products we review.">
+  <p class="lead">
+    Trust is the only thing a review site really sells. This policy explains exactly how {SITE.name}
+    chooses products, tests them, scores them, and keeps reviews honest and current.
+  </p>
+
+  <h2>Independence</h2>
+  <p>
+    Our editorial team operates independently of our business relationships. Brands cannot pay for a
+    review, a higher score, or a spot on a "best of" list. Manufacturers do not see or approve reviews
+    before publication. Affiliate commissions fund our work but never influence our verdicts — see our
+    <a href="/affiliate-disclosure">Affiliate Disclosure</a>.
+  </p>
+
+  <h2>How we choose what to review</h2>
+  <ul>
+    <li>Popularity and reader requests in each category.</li>
+    <li>Products that are new, notable, or frequently asked about.</li>
+    <li>Gaps where existing coverage is thin or outdated.</li>
+  </ul>
+
+  <h2>How we test</h2>
+  <p>Every category has a consistent checklist. In general we:</p>
+  <ol>
+    <li>Obtain the product (purchased ourselves, or a loaner clearly noted in the review).</li>
+    <li>Use it in real conditions for at least two weeks — a working home, a real training routine.</li>
+    <li>Take measurements instead of repeating the box: noise in decibels, stall force, battery life, footprint, heart-rate and step accuracy against reference devices, and so on.</li>
+    <li>Note the drawbacks as plainly as the strengths.</li>
+  </ol>
+
+  <h2>How we score</h2>
+  <p>
+    Ratings are on a 5-star scale (shown as a score out of 10 on reviews). Scores reflect performance
+    for the price and category, not hype. A high price does not earn a high score, and an affiliate
+    relationship never does.
+  </p>
+
+  <h2>Sponsored content &amp; gifts</h2>
+  <p>
+    We do not publish paid or "sponsored" reviews. If a product was provided free by a manufacturer,
+    we say so in the review, and it is held to the same standard as anything we bought. Accepting a
+    sample never guarantees coverage or a positive verdict.
+  </p>
+
+  <h2>Corrections &amp; updates</h2>
+  <p>
+    We update reviews when products change, prices shift materially, or our opinion evolves with
+    longer-term use. If we get something wrong, we fix it and note the correction. Spot an error?
+    <a href="/contact">Tell us</a> and we'll review it promptly.
+  </p>
+
+  <h2>AI &amp; authorship</h2>
+  <p>
+    Reviews reflect real human testing and judgment. We may use tools to assist with research,
+    editing, or formatting, but scores and recommendations are made by our team, not generated
+    automatically.
+  </p>
+
+  <h2>Questions</h2>
+  <p>Reach the editorial team at <a href={`mailto:${LEGAL.legalEmail}`}>{LEGAL.legalEmail}</a>.</p>
+</LegalLayout>

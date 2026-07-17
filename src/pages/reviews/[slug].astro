@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import StarRating from '../../components/StarRating.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { SITE } from '../../consts';
+import { SITE, hubForCategory } from '../../consts';
 
 export const prerender = true;
 
@@ -18,7 +18,7 @@ interface Props {
 const { product } = Astro.props;
 const { Content } = await product.render();
 const { brand, name, tagline, coverImage, rating, specs, pros, cons, priceNote, testingMethodology, author, publishDate, seo, category } = product.data;
-const isMove = category === 'walking-pads';
+const hub = hubForCategory(category);
 const score = rating ? (rating * 2).toFixed(1) : null;
 
 const structuredData = [
@@ -62,8 +62,8 @@ const structuredData = [
   image={coverImage}
   structuredData={structuredData}
 >
-  <article class="container review">
-    <div class="cat">{isMove ? 'Walking pads' : 'Recovery'} · Review</div>
+  <article class={`container review ac-${hub.accent}`}>
+    <div class="cat"><a href={`/best/${hub.slug}`}>{hub.short}</a> · Review</div>
 
     <header class="review-header">
       <div class="himg">
@@ -150,8 +150,10 @@ const structuredData = [
   .review { padding: 50px 24px 90px; max-width: 860px; }
   .cat {
     font-size: 13px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.05em; color: var(--move-deep); margin-bottom: 14px;
+    letter-spacing: 0.05em; color: var(--ac-deep); margin-bottom: 14px;
   }
+  .cat a { color: inherit; }
+  .cat a:hover { text-decoration: underline; }
   .review-header { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 10px; }
   .himg {
     width: 280px; height: 280px; flex: none;
@@ -167,11 +169,11 @@ const structuredData = [
   .sc { font-family: var(--font-heading); font-weight: 600; font-size: 28px; }
   .sc small { font-size: 14px; color: var(--ink-soft); font-family: var(--font-body); }
   .buybtn {
-    display: inline-block; background: var(--move); color: #fff !important;
+    display: inline-block; background: var(--ac); color: #fff !important;
     font-weight: 600; padding: 13px 24px; border-radius: 100px;
     text-decoration: none !important; white-space: nowrap;
   }
-  .buybtn:hover { background: var(--move-deep); }
+  .buybtn:hover { background: var(--ac-deep); }
   .buybtn.sm { padding: 10px 18px; font-size: 13.5px; }
   .price-note { font-size: 13px; color: var(--ink-soft); margin: 8px 0 0; }
   .ameta {

@@ -1,61 +1,94 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, LEGAL, FORMS } from '../consts';
 ---
 <BaseLayout title="Contact" description="Get in touch with the MoveWell Reviews team.">
-  <article class="container legal">
-    <h1>Contact Us</h1>
-    <p>Product suggestions, corrections, or press inquiries — we read every message.</p>
+  <div class="page-hero">
+    <p class="eyebrow">We read every message</p>
+    <h1>Contact us</h1>
+    <p>Product suggestions, corrections to a review, or press inquiries — send them our way.</p>
+  </div>
 
-    <form id="contact-form">
-      <label>
-        Name
-        <input type="text" name="name" required />
-      </label>
-      <label>
-        Email
-        <input type="email" name="email" required />
-      </label>
-      <label>
-        Message
-        <textarea name="message" rows="5" required></textarea>
-      </label>
-      <button type="submit" class="btn btn-primary">Send message</button>
-      <p class="status" id="contact-status" role="status"></p>
-    </form>
-  </article>
+  <section class="container wrap">
+    <div class="grid">
+      <form id="contact-form" action={FORMS.contactEndpoint} method="POST">
+        <label>
+          Name
+          <input type="text" name="name" autocomplete="name" required />
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <label>
+          Subject
+          <select name="subject">
+            <option>Product suggestion</option>
+            <option>Correction / factual error</option>
+            <option>Press or partnership</option>
+            <option>Privacy request</option>
+            <option>Something else</option>
+          </select>
+        </label>
+        <label>
+          Message
+          <textarea name="message" rows="6" required></textarea>
+        </label>
+        <button type="submit" class="btn btn-primary">Send message</button>
+        <p class="status" id="contact-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <aside class="info">
+        <h2>Reach us directly</h2>
+        <p><strong>General:</strong><br /><a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></p>
+        <p><strong>Privacy requests:</strong><br /><a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a></p>
+        <p><strong>Mailing address:</strong><br />{LEGAL.entity}<br />{LEGAL.addressLine1}<br />{LEGAL.addressLine2}</p>
+        <p class="tiny">We aim to reply within 2–3 business days. We don't accept payment for reviews — see our <a href="/editorial-policy">Editorial Policy</a>.</p>
+      </aside>
+    </div>
+  </section>
 </BaseLayout>
 
 <script>
-  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const status = document.getElementById('contact-status');
   form?.addEventListener('submit', async (e) => {
+    if (!form.action || form.action.includes('YOUR_CONTACT_ID')) return; // let native POST show config error
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(form).entries());
     if (status) status.textContent = 'Sending…';
     try {
-      const res = await fetch('/.netlify/functions/contact', {
+      const res = await fetch(form.action, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        headers: { Accept: 'application/json' },
+        body: new FormData(form),
       });
       if (!res.ok) throw new Error('failed');
       if (status) status.textContent = "Thanks — we'll get back to you soon.";
       form.reset();
     } catch {
-      if (status) status.textContent = `Something went wrong — email us directly instead.`;
+      if (status) status.textContent = 'Something went wrong — email us directly instead.';
     }
   });
 </script>
 
 <style>
-  .legal { padding: 40px 24px 70px; max-width: 560px; }
-  .legal p { color: var(--color-ink-soft); }
-  form { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
-  label { display: flex; flex-direction: column; gap: 6px; font-size: 0.88rem; font-weight: 600; color: var(--color-ink); }
-  input, textarea {
-    padding: 11px 14px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font: inherit; font-weight: 400;
+  .wrap { padding: 20px 24px 80px; }
+  .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: start; }
+  form { display: flex; flex-direction: column; gap: 16px; }
+  label { display: flex; flex-direction: column; gap: 6px; font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+  input, textarea, select {
+    padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 12px;
+    font: inherit; font-weight: 400; background: var(--paper); color: var(--ink);
   }
-  input:focus, textarea:focus { outline: 2px solid var(--color-primary-light); outline-offset: 1px; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--move); outline-offset: 1px; border-color: var(--move); }
   button { align-self: flex-start; }
-  .status { font-size: 0.85rem; color: var(--color-ink-soft); min-height: 1.2em; }
+  .status { font-size: 0.88rem; color: var(--ink-soft); min-height: 1.2em; }
+  .info {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px;
+  }
+  .info h2 { font-size: 20px; margin: 0 0 16px; }
+  .info p { color: var(--ink-soft); font-size: 15px; line-height: 1.6; margin: 0 0 16px; }
+  .info a { color: var(--move-deep); text-decoration: underline; }
+  .info .tiny { font-size: 13px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; gap: 28px; } }
 </style>

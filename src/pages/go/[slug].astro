@@ -1,39 +1,49 @@
 ---
-// /go/:slug -> looks up the product's real affiliate URL from the content
-// collection, logs a first-party (no-PII) click event to Supabase, then
-// 302-redirects. Keeping the real destination out of the page HTML is what
-// makes this a "cloaked" affiliate link — a common, TOS-compliant pattern
-// for Amazon Associates and most other affiliate networks. This route must
-// stay server-rendered (not prerendered) so every click is logged.
-export const prerender = false;
+// /go/:slug -> a prerendered redirect page that forwards to the product's real
+// affiliate URL. Keeping the destination out of the linked HTML (a "cloaked"
+// affiliate link) is a common, TOS-compliant pattern for Amazon Associates and
+// most networks, and lets you swap a destination in one place.
+//
+// This is a STATIC site, so each redirect is generated at build time as its own
+// HTML file that does an instant client-side redirect (meta refresh + JS), with
+// a visible fallback link for the rare no-JS visitor.
+export const prerender = true;
 
 import { getCollection } from 'astro:content';
-import { supabase } from '../../lib/supabase';
+import { SITE } from '../../consts';
 
-const { slug } = Astro.params;
-
-const products = await getCollection('products', ({ data }) => data.published);
-const product = products.find((p) => p.slug === slug);
-
-if (!product) {
-  return Astro.redirect('/404', 302);
+export async function getStaticPaths() {
+  const products = await getCollection('products', ({ data }) => data.published);
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { url: product.data.affiliateUrl, name: product.data.name },
+  }));
 }
 
-try {
-  await supabase.from('click_events').insert({
-    affiliate_slug: slug,
-    referrer_path: Astro.request.headers.get('referer') || null,
-    user_agent: Astro.request.headers.get('user-agent') || null,
-  });
-} catch {
-  // never block the redirect on logging failure
-}
-
-return new Response(null, {
-  status: 302,
-  headers: {
-    Location: product.data.affiliateUrl,
-    'Cache-Control': 'no-store',
-  },
-});
+const { url, name } = Astro.props;
 ---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting… | {SITE.name}</title>
+    <link rel="canonical" href={url} />
+    <meta http-equiv="refresh" content={`0; url=${url}`} />
+    <style>
+      body { font-family: system-ui, sans-serif; background: #F4F5F0; color: #17241E;
+        display: grid; place-items: center; min-height: 100vh; margin: 0; text-align: center; padding: 24px; }
+      a { color: #0C6B3F; }
+    </style>
+  </head>
+  <body>
+    <p>
+      Taking you to the retailer for <strong>{name}</strong>…<br />
+      If you are not redirected, <a href={url} rel="sponsored nofollow noopener">click here to continue</a>.
+    </p>
+    <script is:inline define:vars={{ url }}>
+      window.location.replace(url);
+    </script>
+  </body>
+</html>

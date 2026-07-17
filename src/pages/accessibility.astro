@@ -1,0 +1,40 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE, LEGAL } from '../consts';
+---
+<LegalLayout title="Accessibility Statement" description="Our commitment to making MoveWell Reviews usable for everyone.">
+  <p class="lead">
+    {LEGAL.entity} is committed to making {SITE.name} accessible to the widest possible audience,
+    regardless of ability or technology.
+  </p>
+
+  <h2>Our standard</h2>
+  <p>
+    We aim to conform to the <strong>Web Content Accessibility Guidelines (WCAG) 2.1, Level AA</strong>.
+    These guidelines explain how to make web content more accessible to people with a wide range of
+    disabilities, including visual, auditory, motor, and cognitive.
+  </p>
+
+  <h2>What we do</h2>
+  <ul>
+    <li>Maintain sufficient color contrast for text and interactive elements.</li>
+    <li>Provide descriptive alternative text for meaningful images.</li>
+    <li>Support full keyboard navigation with visible focus states.</li>
+    <li>Use semantic headings and landmarks so screen readers can navigate the page.</li>
+    <li>Respect the "reduce motion" setting on your device.</li>
+    <li>Keep tap targets large enough to use comfortably on a phone.</li>
+  </ul>
+
+  <h2>Ongoing effort</h2>
+  <p>
+    Accessibility is an ongoing effort, and some content may not yet be fully optimized. We review the
+    site regularly and fix issues as we find them.
+  </p>
+
+  <h2>Feedback</h2>
+  <p>
+    If you encounter an accessibility barrier on this site, please tell us so we can fix it. Email
+    <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a> with the page address and a short
+    description of the problem, and we'll respond as soon as we can.
+  </p>
+</LegalLayout>

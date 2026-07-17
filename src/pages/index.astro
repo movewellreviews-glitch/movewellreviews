@@ -3,28 +3,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductRow from '../components/ProductRow.astro';
 import Newsletter from '../components/Newsletter.astro';
 import { getCollection } from 'astro:content';
-import { CATEGORY_LABELS } from '../consts';
+import { HUBS } from '../consts';
 
 export const prerender = true;
 
-const RECOVERY_CATEGORIES = ['massage-guns', 'compression', 'foam-rollers'];
-
 const allProducts = await getCollection('products', ({ data }) => data.published);
-const walkingPads = allProducts
-  .filter((p) => p.data.category === 'walking-pads')
-  .sort((a, b) => b.data.rating - a.data.rating)
-  .slice(0, 5);
-const recovery = allProducts
-  .filter((p) => RECOVERY_CATEGORIES.includes(p.data.category))
-  .sort((a, b) => b.data.rating - a.data.rating)
-  .slice(0, 5);
 
-// Featured "pick of the month": highest-rated recovery product, falling back to any product
-const featured = recovery[0] ?? walkingPads[0] ?? null;
-const featuredIsRec = featured ? RECOVERY_CATEGORIES.includes(featured.data.category) : false;
+// Build a "Top 5" list for each hub that actually has products.
+const hubLists = HUBS.map((hub) => ({
+  hub,
+  items: allProducts
+    .filter((p) => hub.categories.includes(p.data.category))
+    .sort((a, b) => b.data.rating - a.data.rating)
+    .slice(0, 5),
+})).filter((h) => h.items.length > 0);
+
+// Featured "pick of the month": highest-rated product overall.
+const featured = [...allProducts].sort((a, b) => b.data.rating - a.data.rating)[0] ?? null;
 const featBars = featured
   ? [
-      { label: 'Quietness', w: Math.min(96, Math.round(featured.data.rating * 20) - 2) },
+      { label: 'Performance', w: Math.min(96, Math.round(featured.data.rating * 20) - 2) },
       { label: 'Build quality', w: Math.min(92, Math.round(featured.data.rating * 20) - 6) },
       { label: 'Value', w: Math.min(84, Math.round(featured.data.rating * 20) - 14) },
     ]
@@ -33,17 +31,22 @@ const featBars = featured
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 const posts = allPosts
   .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
-  .slice(0, 6);
+  .slice(0, 3);
 ---
-<BaseLayout title="Walking Pads & Recovery Gear, Honestly Reviewed">
+<BaseLayout title="Walking Pads, Recovery, Home Gym & Wearables — Honestly Reviewed">
   <section class="hero"><div class="container hero-grid">
     <div>
-      <span class="eyebrow">Independent reviews · Move &amp; recover</span>
+      <span class="eyebrow">Independent, hands-on reviews</span>
       <h1 class="hero-h1">Move <span class="g">more</span>. Recover <span class="o">better</span>. Right from home.</h1>
-      <p class="lede">We test walking pads, massage guns, and recovery tools for people who live and work at home — then tell you what's actually worth buying.</p>
+      <p class="lede">We buy and test walking pads, recovery tools, home-gym gear, and fitness wearables for people who live and work at home — then tell you what's actually worth buying.</p>
       <div class="btns">
         <a href="#picks" class="btn btn-primary">See our top picks →</a>
-        <a href="#test" class="btn btn-secondary">How we test</a>
+        <a href="/editorial-policy" class="btn btn-secondary">How we test</a>
+      </div>
+      <div class="trust">
+        <span>★ Tested in real homes</span>
+        <span>· No pay-for-play reviews</span>
+        <span>· FTC-compliant disclosures</span>
       </div>
     </div>
     {featured && (
@@ -51,77 +54,75 @@ const posts = allPosts
         <div class="fimg">
           <img src={featured.data.coverImage || '/images/placeholder-product.svg'} alt={featured.data.name} />
         </div>
-        <div class="cap">{featuredIsRec ? 'Recovery' : 'Walking pads'} · pick of the month</div>
+        <div class="cap">Pick of the month</div>
         <h3>{featured.data.name}</h3>
         {featBars.map((b) => (
           <div class="row"><span>{b.label}</span><span class="bar"><i style={`width:${b.w}%`}></i></span></div>
         ))}
+        <a href={`/reviews/${featured.slug}`} class="flink">Read the full review →</a>
       </div>
     )}
   </div></section>
 
   <section class="pillars"><div class="container pill-grid">
-    <a class="pillar move" href="/best/walking-pads">
-      <span class="tag">Move</span>
-      <h3>Walking pads</h3>
-      <p>Under-desk treadmills and walking pads that fit a real room — so you move while you work.</p>
-      <span class="lnk">Browse walking pads →</span>
-    </a>
-    <a class="pillar rec" href="/best/recovery-tools">
-      <span class="tag">Recover</span>
-      <h3>Recovery tools</h3>
-      <p>Massage guns, foam rollers, and gear that undoes a long day at the desk.</p>
-      <span class="lnk">Browse recovery gear →</span>
-    </a>
+    {HUBS.map((hub) => (
+      <a class={`pillar ac-${hub.accent}`} href={`/best/${hub.slug}`}>
+        <span class="tag">{hub.tag}</span>
+        <h3>{hub.short}</h3>
+        <p>{hub.blurb}</p>
+        <span class="lnk">Browse {hub.short.toLowerCase()} →</span>
+      </a>
+    ))}
   </div></section>
 
   <section class="blk" id="picks"><div class="container">
     <div class="head">
-      <span class="k">Tested this month</span>
-      <h2 class="title">Top 5 in each category</h2>
-      <p>Our best-rated walking pads and recovery tools, ranked from hands-on testing.</p>
+      <span class="k">Tested &amp; ranked</span>
+      <h2 class="title">Our top picks by category</h2>
+      <p>Best-rated gear in each category, ranked from hands-on testing — not press releases.</p>
     </div>
 
-    <h3 class="listh move">Walking pads — Top 5</h3>
-    <div class="toplist" style="margin-bottom:46px">
-      {walkingPads.map((p, i) => <ProductRow product={p} rank={i + 1} variant="move" />)}
-      {walkingPads.length === 0 && (
-        <p class="empty">No walking pads published yet — add some at <a href="/admin">/admin</a>.</p>
-      )}
-    </div>
+    {hubLists.length === 0 && (
+      <p class="empty">No products published yet. Add reviews in <code>src/content/products/</code> and set <code>published: true</code>.</p>
+    )}
 
-    <h3 class="listh rec">Recovery — Top 5</h3>
-    <div class="toplist">
-      {recovery.map((p, i) => <ProductRow product={p} rank={i + 1} variant="rec" />)}
-      {recovery.length === 0 && (
-        <p class="empty">No recovery tools published yet — add some at <a href="/admin">/admin</a>.</p>
-      )}
-    </div>
+    {hubLists.map(({ hub, items }) => (
+      <div class={`toplist-wrap ac-${hub.accent}`}>
+        <div class="listhead">
+          <h3 class="listh">{hub.short} — Top {items.length}</h3>
+          <a href={`/best/${hub.slug}`} class="seeall">See all →</a>
+        </div>
+        <div class="toplist">
+          {items.map((p, i) => <ProductRow product={p} rank={i + 1} />)}
+        </div>
+      </div>
+    ))}
   </div></section>
 
-  <section class="blk" id="test"><div class="container">
+  <section class="blk method" id="test"><div class="container">
     <div class="head">
       <span class="k">The method</span>
       <h2 class="title">How we test</h2>
-      <p>Why our scores mean something — nothing gets rated from a press release.</p>
+      <p>Why our scores mean something — nothing gets rated from a spec sheet.</p>
     </div>
     <div class="steps">
       <div class="step">
-        <div class="ic">W</div>
-        <h3>Real weeks, real desks</h3>
-        <p>Every walking pad and recovery tool lives at a working desk for weeks before it earns a score.</p>
+        <div class="ic">1</div>
+        <h3>Real weeks, real homes</h3>
+        <p>Every product lives in a working home for weeks before it earns a score — not a 20-minute unboxing.</p>
       </div>
       <div class="step">
-        <div class="ic">M</div>
+        <div class="ic">2</div>
         <h3>We measure, not guess</h3>
-        <p>Noise, amplitude, fold size, battery — we check the numbers ourselves instead of repeating the box.</p>
+        <p>Noise, stall force, battery, heart-rate accuracy, footprint — we check the numbers ourselves.</p>
       </div>
       <div class="step">
-        <div class="ic">$</div>
+        <div class="ic">3</div>
         <h3>Brands don't buy scores</h3>
-        <p>Commissions keep the site running, never the ratings. A weak product stays a weak product here.</p>
+        <p>Commissions keep the lights on, never the ratings. A weak product stays a weak product here.</p>
       </div>
     </div>
+    <a href="/editorial-policy" class="btn btn-secondary" style="margin-top:30px">Read our full editorial policy →</a>
   </div></section>
 
   {posts.length > 0 && (
@@ -138,7 +139,7 @@ const posts = allPosts
               <img src={post.data.coverImage || '/images/placeholder-blog.svg'} alt={post.data.title} loading="lazy" />
             </div>
             <div class="bp-b">
-              <span class="cat move">Guides</span>
+              <span class="cat">Guide</span>
               <h3>{post.data.title}</h3>
               <p>{post.data.excerpt}</p>
               <span class="meta">{post.data.publishDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
@@ -158,19 +159,21 @@ const posts = allPosts
 </BaseLayout>
 
 <style>
-  .hero { padding: 70px 0 54px; }
-  .hero-grid { display: grid; grid-template-columns: 1fr 1.28fr; gap: 48px; align-items: center; }
+  .hero { padding: 66px 0 50px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 48px; align-items: center; }
   .hero-h1 {
-    font-size: clamp(40px, 5.8vw, 70px);
+    font-size: clamp(38px, 5.4vw, 66px);
     font-weight: 600;
-    line-height: 1.03;
+    line-height: 1.04;
     letter-spacing: -0.02em;
     margin: 0;
   }
   .hero-h1 .g { color: var(--move); }
   .hero-h1 .o { color: var(--recover-deep); }
-  .lede { font-size: clamp(18px, 2vw, 22px); color: var(--ink-soft); margin: 26px 0 32px; max-width: 40ch; }
+  .lede { font-size: clamp(17px, 1.9vw, 21px); color: var(--ink-soft); margin: 24px 0 30px; max-width: 46ch; }
   .btns { display: flex; gap: 14px; flex-wrap: wrap; }
+  .trust { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13.5px; color: var(--ink-soft); font-weight: 500; }
+  .trust span:first-child { color: var(--amber-deep); }
 
   .feature {
     background: var(--paper);
@@ -181,7 +184,7 @@ const posts = allPosts
   }
   .feature .fimg {
     border-radius: 16px; overflow: hidden; background: var(--sage);
-    aspect-ratio: 1/1; margin-bottom: 18px;
+    aspect-ratio: 16/11; margin-bottom: 18px;
     display: flex; align-items: center; justify-content: center;
   }
   .feature .fimg img { width: 100%; height: 100%; object-fit: contain; }
@@ -196,46 +199,47 @@ const posts = allPosts
   }
   .bar { height: 6px; border-radius: 4px; background: var(--sage); overflow: hidden; width: 120px; }
   .bar i { display: block; height: 100%; background: var(--recover); }
+  .flink { display: inline-block; margin-top: 14px; font-weight: 600; font-size: 14.5px; color: var(--move-deep); }
+  .flink:hover { text-decoration: underline; }
 
   .pillars { padding: 16px 0 36px; }
-  .pill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .pill-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
   .pillar {
-    border-radius: 20px; padding: 32px; border: 1px solid var(--line);
-    transition: transform 0.16s; display: block;
+    border-radius: 20px; padding: 26px; border: 1px solid var(--line);
+    transition: transform 0.16s, box-shadow 0.16s; display: block;
+    background: linear-gradient(165deg, var(--ac-soft), #F7F8F4);
   }
-  .pillar:hover { transform: translateY(-4px); }
-  .pillar.move { background: linear-gradient(160deg, #EAF5EE, #F4F5F0); }
-  .pillar.rec { background: linear-gradient(160deg, #FBEDE0, #F4F5F0); }
+  .pillar:hover { transform: translateY(-4px); box-shadow: 0 22px 40px -28px rgba(23,36,30,0.4); }
   .pillar .tag {
-    display: inline-block; font-size: 12.5px; font-weight: 600;
+    display: inline-block; font-size: 12px; font-weight: 600;
     text-transform: uppercase; letter-spacing: 0.06em;
-    padding: 5px 12px; border-radius: 100px; color: #fff; margin-bottom: 16px;
+    padding: 5px 12px; border-radius: 100px; color: #fff; margin-bottom: 14px;
+    background: var(--ac);
   }
-  .pillar.move .tag { background: var(--move); }
-  .pillar.rec .tag { background: var(--recover); }
-  .pillar h3 { font-size: 26px; font-weight: 600; margin: 0 0 10px; }
-  .pillar p { color: var(--ink-soft); font-size: 15.5px; margin: 0 0 18px; max-width: 34ch; }
-  .pillar .lnk { font-weight: 600; font-size: 15px; }
-  .pillar.move .lnk { color: var(--move-deep); }
-  .pillar.rec .lnk { color: var(--recover-deep); }
+  .pillar h3 { font-size: 22px; font-weight: 600; margin: 0 0 8px; }
+  .pillar p { color: var(--ink-soft); font-size: 14.5px; margin: 0 0 16px; line-height: 1.55; }
+  .pillar .lnk { font-weight: 600; font-size: 14.5px; color: var(--ac-deep); }
 
-  .listh { font-size: 22px; font-weight: 600; margin: 0 0 18px; }
-  .listh.move { color: var(--move-deep); }
-  .listh.rec { color: var(--recover-deep); }
+  .toplist-wrap { margin-bottom: 40px; }
+  .listhead { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+  .listh { font-size: 22px; font-weight: 600; margin: 0; color: var(--ac-deep); }
+  .seeall { font-weight: 600; font-size: 14.5px; color: var(--ac-deep); white-space: nowrap; }
+  .seeall:hover { text-decoration: underline; }
   .toplist { display: flex; flex-direction: column; gap: 14px; }
-  .empty { color: var(--ink-soft); font-size: 15px; }
-  .empty a { text-decoration: underline; }
+  .empty { color: var(--ink-soft); background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 20px 24px; }
+  .empty code { background: var(--sage); padding: 1px 6px; border-radius: 5px; font-size: 13px; }
 
+  .method { background: var(--paper); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .step { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
+  .step { background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
   .step .ic {
     width: 46px; height: 46px; border-radius: 12px;
     display: grid; place-items: center; margin-bottom: 16px;
-    font-family: var(--font-heading); font-weight: 600; font-size: 20px; color: #fff;
+    font-family: var(--font-heading); font-weight: 700; font-size: 20px; color: #fff;
   }
   .step:nth-child(1) .ic { background: var(--move); }
   .step:nth-child(2) .ic { background: var(--recover); }
-  .step:nth-child(3) .ic { background: var(--ink); }
+  .step:nth-child(3) .ic { background: var(--strength); }
   .step h3 { font-size: 20px; font-weight: 600; margin: 0 0 8px; }
   .step p { color: var(--ink-soft); font-size: 14.5px; margin: 0; }
 
@@ -251,20 +255,22 @@ const posts = allPosts
   .bpost .bp-b { padding: 20px; flex: 1; display: flex; flex-direction: column; }
   .bpost .cat {
     font-size: 12px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.05em; margin-bottom: 10px;
+    letter-spacing: 0.05em; margin-bottom: 10px; color: var(--move-deep);
   }
-  .bpost .cat.move { color: var(--move-deep); }
   .bpost h3 { font-size: 20px; font-weight: 600; margin: 0 0 8px; line-height: 1.2; }
   .bpost p { color: var(--ink-soft); font-size: 14px; flex: 1; margin: 0; }
   .bpost .meta { margin-top: 14px; font-size: 12.5px; color: var(--ink-soft); }
 
+  @media (max-width: 1000px) {
+    .pill-grid { grid-template-columns: 1fr 1fr; }
+  }
   @media (max-width: 900px) {
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-    .pill-grid { grid-template-columns: 1fr; }
     .steps { grid-template-columns: 1fr; }
     .bloglist { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 640px) {
+    .pill-grid { grid-template-columns: 1fr; }
     .bloglist { grid-template-columns: 1fr; }
   }
 </style>

@@ -1,42 +1,72 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE } from '../consts';
+import { SITE, LEGAL, HUBS } from '../consts';
 ---
 <BaseLayout title="About" description="Who's behind MoveWell Reviews and how we test products.">
-  <article class="container legal">
+  <div class="page-hero">
+    <p class="eyebrow">About us</p>
     <h1>About {SITE.name}</h1>
+    <p>{SITE.name} is an independent review site with one job: helping you move more and recover better at home — without wasting money on gear that doesn't deliver.</p>
+  </div>
+
+  <article class="container body">
     <p>
-      {SITE.name} is an independent review site focused on one thing: helping people move more
-      and recover better at home. We cover walking pads / under-desk treadmills and recovery gear
-      like massage guns, compression boots, and mobility tools.
+      Operated by {LEGAL.entity}, we buy and test products across four areas, then publish honest,
+      hands-on verdicts — the good and the bad. We don't rate anything from a spec sheet or a press
+      release.
     </p>
+
+    <div class="hubgrid">
+      {HUBS.map((h) => (
+        <a class={`hubcard ac-${h.accent}`} href={`/best/${h.slug}`}>
+          <span class="tag">{h.tag}</span>
+          <h3>{h.label}</h3>
+          <p>{h.blurb}</p>
+        </a>
+      ))}
+    </div>
 
     <h2>Our process</h2>
     <ol>
       <li>We shortlist products based on popularity, innovation, or reader requests.</li>
-      <li>We buy or otherwise obtain the product (see individual reviews for specifics).</li>
-      <li>We test it against a consistent checklist for its category — noise, build quality, ease of use, and real-world durability.</li>
-      <li>We publish an honest rating, including drawbacks, and update it if our opinion changes.</li>
+      <li>We buy or obtain the product (loaners are clearly noted in the review).</li>
+      <li>We test it against a consistent, measured checklist for its category.</li>
+      <li>We publish an honest rating — including drawbacks — and update it if our opinion changes.</li>
     </ol>
+    <p>Read the details in our <a href="/editorial-policy">Editorial Policy</a>.</p>
 
     <h2>How we're funded</h2>
     <p>
       This site is supported by affiliate commissions — see our
-      <a href="/affiliate-disclosure">Affiliate Disclosure</a> for full details. Commissions never
-      determine our ratings.
+      <a href="/affiliate-disclosure">Affiliate Disclosure</a>. Commissions keep the lights on but
+      never determine our ratings.
     </p>
 
     <h2>Get in touch</h2>
     <p>
-      Product suggestions, corrections, or press inquiries: <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
-      or our <a href="/contact">contact page</a>.
+      Product suggestions, corrections, or press inquiries:
+      <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a> or our
+      <a href="/contact">contact page</a>.
     </p>
   </article>
 </BaseLayout>
 
 <style>
-  .legal { padding: 40px 24px 70px; max-width: 720px; }
-  .legal p { color: var(--color-ink-soft); line-height: 1.75; }
-  .legal ol li { color: var(--color-ink-soft); margin-bottom: 6px; }
-  h2 { margin-top: 34px; }
+  .body { padding: 10px 24px 80px; max-width: 780px; }
+  .body p, .body li { color: var(--ink-soft); line-height: 1.75; }
+  .body h2 { font-size: 26px; margin: 40px 0 12px; }
+  .body a { color: var(--move-deep); text-decoration: underline; }
+  .hubgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 30px 0 8px; }
+  .hubcard {
+    display: block; border: 1px solid var(--line); border-radius: 18px; padding: 22px;
+    background: linear-gradient(165deg, var(--ac-soft), #F7F8F4); transition: transform 0.15s;
+  }
+  .hubcard:hover { transform: translateY(-3px); }
+  .hubcard .tag {
+    display: inline-block; font-size: 11.5px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 4px 11px; border-radius: 100px; color: #fff; background: var(--ac); margin-bottom: 12px;
+  }
+  .hubcard h3 { font-size: 19px; font-weight: 600; margin: 0 0 6px; }
+  .hubcard p { font-size: 14px; margin: 0; text-decoration: none; }
+  @media (max-width: 640px) { .hubgrid { grid-template-columns: 1fr; } }
 </style>

@@ -1,13 +1,15 @@
 ---
+import { FORMS } from '../consts';
 ---
 <div class="news">
   <h2>Get our buying guides in your inbox</h2>
   <p>One email a month. No spam, unsubscribe anytime.</p>
-  <form id="newsletter-form">
-    <input type="email" name="email" placeholder="you@example.com" required />
+  <form id="newsletter-form" action={FORMS.newsletterEndpoint} method="POST">
+    <label class="sr-only" for="nl-email">Email address</label>
+    <input id="nl-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required />
     <button type="submit" class="btn btn-primary">Subscribe</button>
   </form>
-  <p class="status" id="newsletter-status" role="status"></p>
+  <p class="status" id="newsletter-status" role="status" aria-live="polite"></p>
 </div>
 
 <style>
@@ -26,24 +28,30 @@
   }
   input:focus { outline: 2px solid var(--move); border-color: var(--move); }
   .status { margin-top: 14px; min-height: 1.2em; font-size: 14px; color: var(--ink-soft); }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
 </style>
 
 <script>
-  const form = document.getElementById('newsletter-form');
+  // Submits to Formspree via fetch so the visitor stays on-page (no redirect).
+  // Falls back to a normal POST if JS is disabled (form action is set).
+  const form = document.getElementById('newsletter-form') as HTMLFormElement | null;
   const status = document.getElementById('newsletter-status');
   form?.addEventListener('submit', async (e) => {
+    if (!form.action || form.action.includes('YOUR_NEWSLETTER_ID')) return; // let native POST show config error
     e.preventDefault();
-    const email = new FormData(form as HTMLFormElement).get('email');
     if (status) status.textContent = 'Submitting…';
     try {
-      const res = await fetch('/.netlify/functions/subscribe', {
+      const res = await fetch(form.action, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, path: location.pathname }),
+        headers: { Accept: 'application/json' },
+        body: new FormData(form),
       });
       if (!res.ok) throw new Error('failed');
       if (status) status.textContent = "You're subscribed. Thanks!";
-      (form as HTMLFormElement).reset();
+      form.reset();
     } catch {
       if (status) status.textContent = 'Something went wrong — please try again.';
     }

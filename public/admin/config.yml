@@ -22,9 +22,14 @@ collections:
         widget: "select"
         options:
           - { label: "Walking Pads", value: "walking-pads" }
+          - { label: "Treadmills", value: "treadmills" }
           - { label: "Massage Guns", value: "massage-guns" }
           - { label: "Compression Recovery", value: "compression" }
           - { label: "Foam Rollers & Mobility", value: "foam-rollers" }
+          - { label: "Home Gym", value: "home-gym" }
+          - { label: "Strength & Weights", value: "strength" }
+          - { label: "Fitness Wearables", value: "wearables" }
+          - { label: "Sleep & Wellness Tech", value: "wellness-tech" }
       - { label: "Tagline (short, under product name)", name: "tagline", widget: "string", required: false }
       - { label: "Cover Image", name: "coverImage", widget: "image", required: false }
       - { label: "Extra Photos (gallery)", name: "gallery", widget: "list", field: { label: "Image", name: "src", widget: "image" }, required: false }

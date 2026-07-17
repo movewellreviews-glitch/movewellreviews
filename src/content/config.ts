@@ -19,7 +19,18 @@ const blog = defineCollection({
   }),
 });
 
-const CATEGORIES = ['walking-pads', 'massage-guns', 'compression', 'foam-rollers'] as const;
+// Keep in sync with HUBS in src/consts.js
+const CATEGORIES = [
+  'walking-pads',
+  'treadmills',
+  'massage-guns',
+  'compression',
+  'foam-rollers',
+  'home-gym',
+  'strength',
+  'wearables',
+  'wellness-tech',
+] as const;
 
 const products = defineCollection({
   type: 'content',

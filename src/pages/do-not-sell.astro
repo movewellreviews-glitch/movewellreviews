@@ -1,0 +1,67 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE, LEGAL } from '../consts';
+---
+<LegalLayout title="Do Not Sell or Share My Personal Information" description="Your CCPA/CPRA opt-out choices at MoveWell Reviews.">
+  <p class="lead">
+    Under the California Consumer Privacy Act (CCPA), as amended by the California Privacy Rights Act
+    (CPRA), California residents can opt out of the "sale" or "sharing" of their personal information.
+    Similar rights exist under several other U.S. state privacy laws.
+  </p>
+
+  <h2>Our position</h2>
+  <p>
+    {LEGAL.entity} <strong>does not sell your personal information for money.</strong>
+    {LEGAL.sharesDataForAds ? (
+      <span>
+        We do use advertising or analytics partners that may "share" personal information (such as
+        cookie or device identifiers) for cross-context behavioral advertising. You can opt out using
+        the options below.
+      </span>
+    ) : (
+      <span>
+        We do not currently "share" personal information for cross-context behavioral advertising. If
+        that ever changes, this page will provide a working opt-out mechanism, and we will update our
+        <a href="/privacy-policy">Privacy Policy</a> accordingly.
+      </span>
+    )}
+  </p>
+
+  <h2>How to opt out</h2>
+  <ul>
+    <li>
+      <strong>Global Privacy Control (GPC):</strong> We honor the
+      <a href="https://globalprivacycontrol.org/" target="_blank" rel="noopener">Global Privacy Control</a>
+      browser signal. If your browser or extension sends GPC, we treat it as a valid opt-out request.
+    </li>
+    <li>
+      <strong>Cookie banner:</strong> Choose "Decline non-essential" in the consent banner to prevent
+      non-essential analytics/advertising cookies from loading.
+    </li>
+    <li>
+      <strong>Email request:</strong> Send a request to
+      <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a> with the subject "Do Not Sell
+      or Share." We will process verified requests within the timeframe required by law.
+    </li>
+  </ul>
+
+  <h2>Other privacy rights</h2>
+  <p>
+    You may also request to know, access, correct, or delete your personal information. See our
+    <a href="/privacy-policy">Privacy Policy</a> for the full list of rights and how to exercise them.
+    We will not discriminate against you for exercising any privacy right.
+  </p>
+
+  <h2>Authorized agents</h2>
+  <p>
+    You may use an authorized agent to submit a request on your behalf. We may ask the agent for proof
+    of authorization and may ask you to verify your identity directly.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Privacy requests: <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a> — or write to
+    {LEGAL.entity}, {LEGAL.addressLine1}, {LEGAL.addressLine2}.
+  </p>
+  <p class="notice">Reminder: This site is {SITE.name}. Replace the placeholder business details in <code>src/consts.js</code> before launch.</p>
+</LegalLayout>

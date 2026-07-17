@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { SITE, HUBS, CATEGORY_LABELS } from '../../consts';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return HUBS.map((hub) => ({ params: { hub: hub.slug }, props: { hub } }));
+}
+
+interface Props {
+  hub: (typeof HUBS)[number];
+}
+const { hub } = Astro.props;
+
+const allProducts = await getCollection(
+  'products',
+  ({ data }) => data.published && hub.categories.includes(data.category)
+);
+const products = allProducts.sort((a, b) => b.data.rating - a.data.rating);
+
+// Group by sub-category so multi-category hubs (e.g. Recovery) get sub-headings.
+const groups = new Map<string, CollectionEntry<'products'>[]>();
+for (const p of products) {
+  const label = CATEGORY_LABELS[p.data.category] ?? p.data.category;
+  if (!groups.has(label)) groups.set(label, []);
+  groups.get(label)!.push(p);
+}
+const showSubheads = groups.size > 1;
+
+function topSpecLabels(items: CollectionEntry<'products'>[]) {
+  const labels = new Set<string>();
+  for (const p of items) for (const s of p.data.specs) labels.add(s.label);
+  return [...labels].slice(0, 4);
+}
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `Best ${hub.label}`,
+  itemListElement: products.map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: `${SITE.url}/reviews/${p.slug}`,
+    name: p.data.name,
+  })),
+};
+---
+<BaseLayout
+  title={`Best ${hub.label} (Tested & Ranked)`}
+  description={hub.blurb}
+  structuredData={structuredData}
+>
+  <div class={`cathero ac-${hub.accent}`}>
+    <div class="container">
+      <span class="tag">{hub.tag}</span>
+      <h1>{hub.label}</h1>
+      <p>{hub.intro}</p>
+    </div>
+  </div>
+
+  {products.length === 0 && (
+    <section class="container empty-wrap">
+      <p class="empty">No published products in this category yet. Add reviews in <code>src/content/products/</code> and set <code>published: true</code>.</p>
+    </section>
+  )}
+
+  {[...groups.entries()].map(([catName, items]) => (
+    <section class={`container catsec ac-${hub.accent}`}>
+      {showSubheads && <h2 class="subhead">{catName}</h2>}
+      <div class="catgrid">
+        {items.map((p) => <ProductCard product={p} />)}
+      </div>
+    </section>
+  ))}
+
+  {products.length > 1 && (
+    <section class={`container cmpsec ac-${hub.accent}`}>
+      <h2>Side-by-side comparison</h2>
+      <ComparisonTable products={products} specLabels={topSpecLabels(products)} />
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .cathero { padding: 54px 0 8px; }
+  .cathero .tag {
+    display: inline-block; font-size: 12.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 5px 12px; border-radius: 100px; color: #fff;
+    margin-bottom: 16px; background: var(--ac);
+  }
+  .cathero h1 { font-size: clamp(32px, 4.8vw, 50px); font-weight: 600; margin: 0; }
+  .cathero p { color: var(--ink-soft); font-size: 17px; margin: 12px 0 0; max-width: 62ch; }
+  .catsec { padding: 30px 24px 10px; }
+  .subhead { font-size: 24px; margin: 12px 0 18px; color: var(--ac-deep); }
+  .catgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .cmpsec { padding: 34px 24px 80px; }
+  .cmpsec h2 { font-size: clamp(24px, 3vw, 32px); }
+  .empty-wrap { padding: 40px 24px; }
+  .empty { color: var(--ink-soft); background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 20px 24px; }
+  .empty code { background: var(--sage); padding: 1px 6px; border-radius: 5px; font-size: 13px; }
+  @media (max-width: 900px) { .catgrid { grid-template-columns: 1fr; } }
+</style>

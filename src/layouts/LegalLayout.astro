@@ -1,0 +1,45 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  updated?: string; // ISO date; defaults to today
+  intro?: string;
+}
+const { title, description, updated } = Astro.props;
+const updatedDate = updated ? new Date(updated) : new Date();
+---
+<BaseLayout title={title} description={description}>
+  <div class="page-hero legal-hero">
+    <p class="eyebrow">Legal &amp; policies</p>
+    <h1>{title}</h1>
+    <p class="updated">Last updated: {updatedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+  </div>
+  <article class="container legal">
+    <slot />
+  </article>
+</BaseLayout>
+
+<style>
+  .legal-hero { padding-bottom: 8px; }
+  .legal-hero .updated { color: var(--ink-soft); font-size: 0.85rem; margin-top: 8px; }
+  .legal { padding: 20px 24px 80px; max-width: 760px; }
+  .legal :global(h2) {
+    font-family: var(--font-heading); font-size: 24px; font-weight: 600;
+    margin: 38px 0 10px; color: var(--ink);
+  }
+  .legal :global(h3) { font-size: 18px; font-weight: 600; margin: 22px 0 8px; }
+  .legal :global(p), .legal :global(li) { color: var(--ink-soft); line-height: 1.75; }
+  .legal :global(ul), .legal :global(ol) { padding-left: 22px; }
+  .legal :global(li) { margin-bottom: 8px; }
+  .legal :global(a) { color: var(--move-deep); text-decoration: underline; }
+  .legal :global(strong) { color: var(--ink); }
+  .legal :global(code) { background: var(--sage); padding: 1px 6px; border-radius: 5px; font-size: 0.9em; }
+  .legal :global(.notice) {
+    background: #FBF3DD; border: 1px solid #E9D08C; border-radius: 12px;
+    padding: 14px 18px; font-size: 0.9rem; color: #5b4a1e;
+  }
+  .legal :global(.notice a) { color: #7a5a12; }
+  .legal :global(.lead) { font-size: 1.05rem; color: var(--ink); }
+</style>
