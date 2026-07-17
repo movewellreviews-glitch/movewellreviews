@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ComparisonTable from '../components/ComparisonTable.astro';
-import AffiliateDisclosure from '../components/AffiliateDisclosure.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { CATEGORY_LABELS } from '../consts';
 
@@ -27,7 +26,6 @@ function topSpecLabels(items: CollectionEntry<'products'>[]) {
   <section class="container header-block">
     <h1>Compare</h1>
     <p>Every product we've reviewed, side by side, grouped by category.</p>
-    <AffiliateDisclosure compact />
   </section>
 
   {[...groups.entries()].map(([catName, items]) => (

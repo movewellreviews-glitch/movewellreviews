@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SITE } from '../../consts';
 
@@ -40,7 +39,6 @@ const structuredData = {
       By {post.data.author} · {post.data.publishDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
     </p>
     {post.data.coverImage && <img class="cover" src={post.data.coverImage} alt={post.data.title} />}
-    <AffiliateDisclosure compact />
     <div class="body">
       <Content />
     </div>

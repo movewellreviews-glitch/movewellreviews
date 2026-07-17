@@ -3,7 +3,7 @@
 // Only relevant if you add ad-tech/analytics that share data with third parties.
 // Privacy-first analytics (e.g. Plausible) don't require this at all.
 ---
-<div id="cookie-consent" class="cookie-banner" hidden>
+<div id="cookie-consent" class="cookie-banner">
   <div class="card">
     <p>
       We use minimal analytics to understand traffic. We do not sell your personal information.
@@ -23,10 +23,13 @@
     right: 0;
     bottom: 16px;
     z-index: 300;
-    display: flex;
+    display: none;
     justify-content: center;
     padding: 0 16px;
     pointer-events: none;
+  }
+  .cookie-banner.is-visible {
+    display: flex;
   }
   .card {
     pointer-events: auto;
@@ -71,16 +74,16 @@
   const KEY = 'movewell_consent';
   const banner = document.getElementById('cookie-consent');
   const stored = localStorage.getItem(KEY);
-  if (!stored && banner) banner.hidden = false;
+  if (!stored && banner) banner.classList.add('is-visible');
 
   document.getElementById('cookie-accept')?.addEventListener('click', () => {
     localStorage.setItem(KEY, 'accepted');
-    if (banner) banner.hidden = true;
+    if (banner) banner.classList.remove('is-visible');
     document.dispatchEvent(new CustomEvent('consent-changed', { detail: 'accepted' }));
   });
   document.getElementById('cookie-decline')?.addEventListener('click', () => {
     localStorage.setItem(KEY, 'declined');
-    if (banner) banner.hidden = true;
+    if (banner) banner.classList.remove('is-visible');
     document.dispatchEvent(new CustomEvent('consent-changed', { detail: 'declined' }));
   });
 </script>

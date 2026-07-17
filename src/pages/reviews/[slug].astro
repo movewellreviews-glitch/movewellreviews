@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import StarRating from '../../components/StarRating.astro';
-import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SITE } from '../../consts';
 
@@ -79,8 +78,6 @@ const structuredData = [
         {priceNote && <p class="price-note">{priceNote}</p>}
       </div>
     </header>
-
-    <AffiliateDisclosure />
 
     {(pros.length > 0 || cons.length > 0) && (
       <section class="pros-cons">

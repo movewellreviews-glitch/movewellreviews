@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProductCard from '../../components/ProductCard.astro';
-import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
 import { getCollection } from 'astro:content';
 
 export const prerender = true;
@@ -13,7 +12,6 @@ const products = allProducts.sort((a, b) => b.data.rating - a.data.rating);
   <section class="container header-block">
     <h1>All Reviews</h1>
     <p>Every product we've bought and tested ourselves.</p>
-    <AffiliateDisclosure compact />
   </section>
 
   <section class="container">

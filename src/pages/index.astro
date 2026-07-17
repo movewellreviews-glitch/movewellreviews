@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
-import AffiliateDisclosure from '../components/AffiliateDisclosure.astro';
 import Newsletter from '../components/Newsletter.astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../consts';
@@ -33,10 +32,6 @@ const posts = allPosts
       <a href="/best/walking-pads" class="btn-primary">Best Walking Pads →</a>
       <a href="/best/recovery-tools" class="btn-secondary">Best Recovery Tools →</a>
     </div>
-  </section>
-
-  <section class="container">
-    <AffiliateDisclosure compact />
   </section>
 
   <section class="container block">

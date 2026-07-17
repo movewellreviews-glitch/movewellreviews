@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProductCard from '../../components/ProductCard.astro';
-import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SITE, CATEGORY_LABELS } from '../../consts';
 
@@ -44,7 +43,6 @@ const structuredData = {
       Each device here was used consistently after training sessions for at least two weeks — we look at
       perceived soreness reduction, build quality, battery life, and noise.
     </p>
-    <AffiliateDisclosure compact />
   </section>
 
   {[...groups.entries()].map(([catName, items]) => (

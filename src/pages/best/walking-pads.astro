@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import ComparisonTable from '../../components/ComparisonTable.astro';
-import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../../consts';
 
@@ -38,7 +37,6 @@ const structuredData = {
       We put each walking pad through the same treadmill test: noise at 2 mph next to a laptop mic,
       wobble under load, folding mechanism durability, and app/remote reliability over two weeks of daily use.
     </p>
-    <AffiliateDisclosure compact />
   </section>
 
   <section class="container">
