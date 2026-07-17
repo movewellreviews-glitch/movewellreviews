@@ -4,11 +4,18 @@ import ProductCard from '../../components/ProductCard.astro';
 import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
 import { supabase } from '../../lib/supabase';
 
-const { data: products } = await supabase
+const { data: products, error } = await supabase
   .from('products')
   .select('slug,brand,name,tagline,image_url,rating,best_for,affiliate_slug,price_note')
   .eq('is_published', true)
   .order('rating', { ascending: false });
+
+// TEMP DIAGNOSTIC — remove once the empty-results issue is resolved.
+console.log('[diag] PUBLIC_SUPABASE_URL set:', Boolean(import.meta.env.PUBLIC_SUPABASE_URL));
+console.log('[diag] PUBLIC_SUPABASE_URL value:', import.meta.env.PUBLIC_SUPABASE_URL);
+console.log('[diag] PUBLIC_SUPABASE_ANON_KEY set:', Boolean(import.meta.env.PUBLIC_SUPABASE_ANON_KEY));
+console.log('[diag] products count:', products?.length ?? 'null');
+console.log('[diag] supabase error:', JSON.stringify(error));
 ---
 <BaseLayout title="All Reviews" description="Every product we've tested and reviewed, walking pads and recovery gear alike.">
   <section class="container header-block">
