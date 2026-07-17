@@ -1,0 +1,64 @@
+---
+import StarRating from './StarRating.astro';
+
+interface Props {
+  products: Array<{
+    slug: string;
+    brand: string;
+    name: string;
+    image_url?: string;
+    rating?: number;
+    specs?: Record<string, string>;
+    affiliate_slug: string;
+  }>;
+  specKeys: Array<{ key: string; label: string }>;
+}
+const { products, specKeys } = Astro.props;
+---
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Rating</th>
+        {specKeys.map((s) => <th>{s.label}</th>)}
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {products.map((p) => (
+        <tr>
+          <td class="product-cell">
+            <img src={p.image_url || '/images/placeholder-product.svg'} alt={p.name} />
+            <div>
+              <div class="brand">{p.brand}</div>
+              <a href={`/reviews/${p.slug}`}>{p.name}</a>
+            </div>
+          </td>
+          <td>{p.rating ? <StarRating rating={p.rating} /> : '—'}</td>
+          {specKeys.map((s) => <td>{p.specs?.[s.key] ?? '—'}</td>)}
+          <td>
+            <a href={`/go/${p.affiliate_slug}`} class="btn-primary" rel="sponsored nofollow noopener" target="_blank">
+              Check price
+            </a>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .table-wrap { overflow-x: auto; margin: 24px 0; border: 1px solid #eee; border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 0.88rem; }
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #eee; white-space: nowrap; }
+  thead th { background: #f7f8f7; font-weight: 700; color: #444; }
+  .product-cell { display: flex; align-items: center; gap: 10px; white-space: normal; min-width: 220px; }
+  .product-cell img { width: 48px; height: 48px; object-fit: contain; background: #f6f7f6; border-radius: 6px; }
+  .brand { font-size: 0.7rem; color: #888; font-weight: 700; text-transform: uppercase; }
+  .product-cell a { color: #16241a; font-weight: 600; text-decoration: none; }
+  .btn-primary {
+    display: inline-block; background: #14532d; color: white;
+    padding: 7px 14px; border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 0.82rem;
+  }
+</style>

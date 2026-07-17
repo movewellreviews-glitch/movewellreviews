@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../consts';
+---
+<BaseLayout title="About" description="Who's behind MoveWell Reviews and how we test products.">
+  <article class="container legal">
+    <h1>About {SITE.name}</h1>
+    <p>
+      {SITE.name} is an independent review site focused on one thing: helping people move more
+      and recover better at home. We cover walking pads / under-desk treadmills and recovery gear
+      like massage guns, compression boots, and mobility tools.
+    </p>
+
+    <h2>Our process</h2>
+    <ol>
+      <li>We shortlist products based on popularity, innovation, or reader requests.</li>
+      <li>We buy or otherwise obtain the product (see individual reviews for specifics).</li>
+      <li>We test it against a consistent checklist for its category — noise, build quality, ease of use, and real-world durability.</li>
+      <li>We publish an honest rating, including drawbacks, and update it if our opinion changes.</li>
+    </ol>
+
+    <h2>How we're funded</h2>
+    <p>
+      This site is supported by affiliate commissions — see our
+      <a href="/affiliate-disclosure">Affiliate Disclosure</a> for full details. Commissions never
+      determine our ratings.
+    </p>
+
+    <h2>Get in touch</h2>
+    <p>
+      Product suggestions, corrections, or press inquiries: <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
+      or our <a href="/contact">contact page</a>.
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal { padding: 40px 24px 70px; max-width: 720px; }
+  h2 { margin-top: 30px; }
+</style>

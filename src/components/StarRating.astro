@@ -1,0 +1,16 @@
+---
+interface Props {
+  rating: number; // 0-5
+}
+const { rating } = Astro.props;
+const full = Math.round(rating);
+---
+<span class="stars" aria-label={`Rated ${rating} out of 5`}>
+  {'★'.repeat(full)}{'☆'.repeat(5 - full)}
+  <span class="num">{rating.toFixed(1)}</span>
+</span>
+
+<style>
+  .stars { color: #d9a441; font-size: 0.95rem; }
+  .num { color: #777; margin-left: 4px; font-size: 0.85rem; }
+</style>

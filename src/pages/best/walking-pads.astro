@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
+import { supabase } from '../../lib/supabase';
+import { SITE } from '../../consts';
+
+const { data: products } = await supabase
+  .from('products')
+  .select('slug,brand,name,tagline,image_url,rating,best_for,affiliate_slug,price_note,specs,categories!inner(slug)')
+  .eq('is_published', true)
+  .eq('categories.slug', 'walking-pads')
+  .order('rating', { ascending: false });
+
+const specKeys = [
+  { key: 'speed_range', label: 'Speed range' },
+  { key: 'weight_capacity', label: 'Weight capacity' },
+  { key: 'noise_level', label: 'Noise level' },
+  { key: 'dimensions_folded', label: 'Folded size' },
+];
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: (products ?? []).map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: `${SITE.url}/reviews/${p.slug}`,
+    name: p.name,
+  })),
+};
+---
+<BaseLayout
+  title="Best Walking Pads (Tested & Ranked)"
+  description="We tested under-desk treadmills and walking pads for noise, stability, and build quality. Here are our top picks."
+  structuredData={structuredData}
+>
+  <section class="container header-block">
+    <h1>Best Walking Pads, Tested &amp; Ranked</h1>
+    <p>
+      We put each walking pad through the same treadmill test: noise at 2 mph next to a laptop mic,
+      wobble under load, folding mechanism durability, and app/remote reliability over two weeks of daily use.
+    </p>
+    <AffiliateDisclosure compact />
+  </section>
+
+  <section class="container">
+    <div class="grid">
+      {(products ?? []).map((p) => <ProductCard product={p} />)}
+      {(!products || products.length === 0) && (
+        <p class="empty">No published walking pads yet — publish some in Supabase to populate this page.</p>
+      )}
+    </div>
+  </section>
+
+  {products && products.length > 1 && (
+    <section class="container">
+      <h2>Side-by-side comparison</h2>
+      <ComparisonTable products={products} specKeys={specKeys} />
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .header-block { padding: 40px 24px 10px; max-width: 780px; margin: 0 auto; }
+  .header-block h1 { margin-bottom: 10px; }
+  .header-block p { color: #555; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin: 24px auto 50px; }
+  .empty { color: #888; }
+  h2 { margin-top: 40px; }
+</style>

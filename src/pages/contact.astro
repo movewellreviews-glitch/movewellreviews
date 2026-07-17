@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Contact" description="Get in touch with the MoveWell Reviews team.">
+  <article class="container legal">
+    <h1>Contact Us</h1>
+    <p>Product suggestions, corrections, or press inquiries — we read every message.</p>
+
+    <form id="contact-form">
+      <label>
+        Name
+        <input type="text" name="name" required />
+      </label>
+      <label>
+        Email
+        <input type="email" name="email" required />
+      </label>
+      <label>
+        Message
+        <textarea name="message" rows="5" required></textarea>
+      </label>
+      <button type="submit">Send message</button>
+      <p class="status" id="contact-status" role="status"></p>
+    </form>
+  </article>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const status = document.getElementById('contact-status');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (status) status.textContent = 'Sending…';
+    try {
+      const res = await fetch('/.netlify/functions/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('failed');
+      if (status) status.textContent = "Thanks — we'll get back to you soon.";
+      form.reset();
+    } catch {
+      if (status) status.textContent = `Something went wrong — email us directly instead.`;
+    }
+  });
+</script>
+
+<style>
+  .legal { padding: 40px 24px 70px; max-width: 560px; }
+  form { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+  label { display: flex; flex-direction: column; gap: 6px; font-size: 0.88rem; font-weight: 600; color: #333; }
+  input, textarea {
+    padding: 10px 12px; border: 1px solid #ccc; border-radius: 7px; font: inherit; font-weight: 400;
+  }
+  button {
+    align-self: flex-start; padding: 11px 22px; background: #14532d; color: white; border: none;
+    border-radius: 8px; font-weight: 700; cursor: pointer;
+  }
+  .status { font-size: 0.85rem; color: #555; min-height: 1.2em; }
+</style>

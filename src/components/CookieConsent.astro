@@ -1,0 +1,65 @@
+---
+// Lightweight, no-cookie-until-consent banner for CCPA/CPRA visitors.
+// Only relevant if you add ad-tech/analytics that share data with third parties.
+// Privacy-first analytics (e.g. Plausible) don't require this at all.
+---
+<div id="cookie-consent" class="cookie-banner" hidden>
+  <p>
+    We use minimal analytics to understand traffic. We do not sell your personal information.
+    See our <a href="/privacy-policy">Privacy Policy</a>.
+  </p>
+  <div class="actions">
+    <button id="cookie-decline" class="btn-ghost">Decline non-essential</button>
+    <button id="cookie-accept" class="btn-primary">Accept</button>
+  </div>
+</div>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: #1a1a1a;
+    color: #eee;
+    padding: 16px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.2);
+  }
+  .cookie-banner p { margin: 0; font-size: 0.85rem; max-width: 640px; }
+  .cookie-banner a { color: #7fd1ae; }
+  .actions { display: flex; gap: 10px; }
+  .btn-primary, .btn-ghost {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .btn-primary { background: #2f9e6e; color: white; }
+  .btn-ghost { background: transparent; color: #ccc; border-color: #555; }
+</style>
+
+<script>
+  const KEY = 'movewell_consent';
+  const banner = document.getElementById('cookie-consent');
+  const stored = localStorage.getItem(KEY);
+  if (!stored && banner) banner.hidden = false;
+
+  document.getElementById('cookie-accept')?.addEventListener('click', () => {
+    localStorage.setItem(KEY, 'accepted');
+    if (banner) banner.hidden = true;
+    document.dispatchEvent(new CustomEvent('consent-changed', { detail: 'accepted' }));
+  });
+  document.getElementById('cookie-decline')?.addEventListener('click', () => {
+    localStorage.setItem(KEY, 'declined');
+    if (banner) banner.hidden = true;
+    document.dispatchEvent(new CustomEvent('consent-changed', { detail: 'declined' }));
+  });
+</script>

@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
+import { supabase } from '../../lib/supabase';
+
+const { data: products } = await supabase
+  .from('products')
+  .select('slug,brand,name,tagline,image_url,rating,best_for,affiliate_slug,price_note')
+  .eq('is_published', true)
+  .order('rating', { ascending: false });
+---
+<BaseLayout title="All Reviews" description="Every product we've tested and reviewed, walking pads and recovery gear alike.">
+  <section class="container header-block">
+    <h1>All Reviews</h1>
+    <p>Every product we've bought and tested ourselves.</p>
+    <AffiliateDisclosure compact />
+  </section>
+
+  <section class="container">
+    <div class="grid">
+      {(products ?? []).map((p) => <ProductCard product={p} />)}
+      {(!products || products.length === 0) && (
+        <p class="empty">No published reviews yet. Add products in Supabase and set is_published = true.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .header-block { padding: 40px 24px 10px; }
+  .header-block h1 { margin-bottom: 6px; }
+  .header-block p { color: #666; margin-top: 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin: 24px auto 60px; }
+  .empty { color: #888; }
+</style>

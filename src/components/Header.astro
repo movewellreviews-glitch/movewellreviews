@@ -1,0 +1,52 @@
+---
+import { SITE, NAV_LINKS } from '../consts';
+---
+<header class="site-header">
+  <div class="inner">
+    <a href="/" class="logo">{SITE.name}</a>
+    <nav>
+      {NAV_LINKS.map((link) => (
+        <a href={link.href}>{link.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: #ffffff;
+    border-bottom: 1px solid #ececec;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .logo {
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: #14532d;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  nav {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  nav a {
+    color: #333;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 500;
+  }
+  nav a:hover { color: #14532d; }
+</style>

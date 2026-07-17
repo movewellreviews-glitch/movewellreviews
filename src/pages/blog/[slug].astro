@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { supabase } from '../../lib/supabase';
+import { SITE } from '../../consts';
+
+const { slug } = Astro.params;
+
+const { data: post } = await supabase
+  .from('blog_posts')
+  .select('*')
+  .eq('slug', slug)
+  .eq('is_published', true)
+  .maybeSingle();
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  image: post.cover_image_url ? new URL(post.cover_image_url, SITE.url).toString() : undefined,
+  datePublished: post.published_at,
+  dateModified: post.updated_at,
+  author: { '@type': 'Organization', name: post.author },
+};
+---
+<BaseLayout title={post.title} description={post.excerpt} image={post.cover_image_url} structuredData={structuredData}>
+  <article class="container post">
+    <nav class="breadcrumb"><a href="/blog">Guides</a> / {post.title}</nav>
+    <h1>{post.title}</h1>
+    {post.published_at && (
+      <p class="meta">
+        By {post.author} · {new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </p>
+    )}
+    {post.cover_image_url && <img class="cover" src={post.cover_image_url} alt={post.title} />}
+    <div class="body" set:html={post.body_html} />
+  </article>
+</BaseLayout>
+
+<style>
+  .post { padding: 30px 24px 70px; max-width: 760px; }
+  .breadcrumb { font-size: 0.8rem; color: #888; margin-bottom: 14px; }
+  .breadcrumb a { color: #888; }
+  .meta { color: #888; font-size: 0.85rem; }
+  .cover { border-radius: 12px; margin: 16px 0; }
+  .body { font-size: 1rem; margin-top: 20px; }
+  .body :global(h2) { margin-top: 32px; }
+</style>

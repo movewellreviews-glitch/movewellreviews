@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
+import { supabase } from '../../lib/supabase';
+import { SITE } from '../../consts';
+
+const { data: products } = await supabase
+  .from('products')
+  .select('slug,brand,name,tagline,image_url,rating,best_for,affiliate_slug,price_note,categories!inner(slug,name)')
+  .eq('is_published', true)
+  .in('categories.slug', ['massage-guns', 'compression', 'foam-rollers'])
+  .order('rating', { ascending: false });
+
+const groups = new Map<string, typeof products>();
+for (const p of products ?? []) {
+  const catName = (p as any).categories?.name ?? 'Other';
+  if (!groups.has(catName)) groups.set(catName, [] as any);
+  (groups.get(catName) as any).push(p);
+}
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: (products ?? []).map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: `${SITE.url}/reviews/${p.slug}`,
+    name: p.name,
+  })),
+};
+---
+<BaseLayout
+  title="Best Recovery Tools (Tested & Ranked)"
+  description="Massage guns, compression boots, and mobility tools we've actually used post-workout. Here's what's worth buying."
+  structuredData={structuredData}
+>
+  <section class="container header-block">
+    <h1>Best Recovery Tools, Tested &amp; Ranked</h1>
+    <p>
+      Each device here was used consistently after training sessions for at least two weeks — we look at
+      perceived soreness reduction, build quality, battery life, and noise.
+    </p>
+    <AffiliateDisclosure compact />
+  </section>
+
+  {[...groups.entries()].map(([catName, items]) => (
+    <section class="container block">
+      <h2>{catName}</h2>
+      <div class="grid">
+        {(items as any[]).map((p) => <ProductCard product={p} />)}
+      </div>
+    </section>
+  ))}
+
+  {(!products || products.length === 0) && (
+    <section class="container">
+      <p class="empty">No published recovery products yet — publish some in Supabase to populate this page.</p>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .header-block { padding: 40px 24px 10px; max-width: 780px; margin: 0 auto; }
+  .header-block h1 { margin-bottom: 10px; }
+  .header-block p { color: #555; }
+  .block { margin: 36px auto; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 18px; }
+  .empty { color: #888; }
+</style>
