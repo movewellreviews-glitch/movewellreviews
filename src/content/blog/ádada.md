@@ -4,7 +4,7 @@ excerpt: ádasdasdad
 coverImage: ''
 author: MoveWell Reviews Team
 publishDate: 2026-07-17T13:36
-draft: true
+draft: false
 seo: null
 ---
 
@@ -94,6 +94,5 @@ Links and Publication Notes
 Useful links
 
 ·         Official Theragun Prime 6th Gen product page
-
 
 ·         MoveWell Recovery category
