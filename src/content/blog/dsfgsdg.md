@@ -4,7 +4,7 @@ slug: hgfhgfghfg
 description: fghfghfgh
 date: 2026-07-21
 author: MoveWell Team
-category: ''
+category: walking-pads
 image: ''
 imageAlt: ''
 ---
